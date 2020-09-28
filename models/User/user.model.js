@@ -118,6 +118,7 @@ async function login(req, res, next){
 
         console.log(`[log] login : {id: ${user.id}, name: ${user.name}}`);
         res.status(200).json({
+            result: 1,
             idx: user._id,
             id: user.id,
             name: user.name,
