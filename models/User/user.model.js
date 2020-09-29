@@ -37,16 +37,16 @@ function getUserVerif(req, res, next){
     const idx = req.params.idx;
 
     if(!user_idx) return res.status(401).json("Available after login");
-    if(!idx) return res.status(200).json({result: -1, message: "idx : is_false"});
     if(!Mongoose.Types.ObjectId.isValid(idx)) return res.status(200).json({result: -1, message: "idx : is_not_idx"});
 
     
     next();
 }
 async function getUser(req, res, next){
+    const user_idx = req.jwt_user_idx;
     const idx = req.params.idx;
 
-    const user = await User.Schema.findById(idx);
+    const user = await User.Schema.findById(idx | user_idx);
     if(!user) return res.status(200).json({});
     res.status(200).json({
         id: user.id,
