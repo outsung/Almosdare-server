@@ -123,8 +123,8 @@ async function login(req, res, next){
             idx: user._id,
             id: user.id,
             name: user.name,
-            access_token: token,
-            token_type: "bearer",
+            accessToken: token,
+            tokenType: "bearer",
         });
     });
 }
