@@ -118,12 +118,13 @@ async function login(req, res, next){
 
         
         console.log(`[log] login : {id: ${user.id}, name: ${user.name}}`);
-        res.header({'Authorization': token});
         res.status(200).json({
             result: 1,
             idx: user._id,
             id: user.id,
-            name: user.name
+            name: user.name,
+            access_token: token,
+            token_type: "bearer",
         });
     });
 }
