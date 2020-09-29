@@ -50,7 +50,7 @@ async function getUser(req, res, next){
     if(!user) return res.status(200).json({});
     res.status(200).json({
         id: user.id,
-        name: user.name,
+        name: user.name
     });
 }
 
@@ -124,7 +124,7 @@ async function login(req, res, next){
             id: user.id,
             name: user.name,
             accessToken: token,
-            tokenType: "bearer",
+            tokenType: "Bearer",
         });
     });
 }
