@@ -37,8 +37,7 @@ function getUserVerif(req, res, next){
     const idx = req.params.idx;
 
     if(!user_idx) return res.status(401).json("Available after login");
-    if(!Mongoose.Types.ObjectId.isValid(idx)) return res.status(200).json({result: -1, message: "idx : is_not_idx"});
-
+    if(idx && !Mongoose.Types.ObjectId.isValid(idx)) return res.status(200).json({result: -1, message: "idx : is_not_idx"});
     
     next();
 }
