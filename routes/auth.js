@@ -15,7 +15,7 @@ function include_jwt_info(req, res, next){
         console.log("Jwt.verify", err, jwt_user);
         if(err){ req.jwt_user_idx = null; return next(); }
         
-        req.jwt_user_idx = jwt_user.idx | null;
+        req.jwt_user_idx = jwt_user.keys().includes("idx") ? jwt_user.idx : null;
         next();
     });
 }
