@@ -33,8 +33,6 @@ const userSchema = new Schema({
 
 // Func
 function getUserVerif(req, res, next){
-    console.log("getUserVerif", req.jwt_user_idx, req.params.idx);
-
     const user_idx = req.jwt_user_idx;
     const idx = req.params.idx;
 
