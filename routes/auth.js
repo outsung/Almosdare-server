@@ -5,6 +5,8 @@ const Jwt = require("jsonwebtoken");
 function include_jwt_info(req, res, next){
     const authorization = req.headers.authorization;
 
+    console.log("authorization => ", authorization);
+
     if(!authorization || authorization.indexOf("Bearer ") === -1){ req.jwt_user_idx = null; return next(); }
 
     const token = authorization.split(" ")[1];
