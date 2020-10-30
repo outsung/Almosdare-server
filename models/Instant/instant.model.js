@@ -77,6 +77,8 @@ async function invitingUserVerif(req, res, next){
     const idx = req.params.idx;
     const users = req.body.users;
 
+    console.log("users : ", users);
+
     if(!idx) return res.status(200).json({result: -1, message: "idx : is_false"});
     if(!users.length) return res.status(200).json({result: -1, message: "users : is_empty"});
     
