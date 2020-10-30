@@ -4,11 +4,6 @@ const Mongoose = require('mongoose');
 // Schema
 const Schema = Mongoose.Schema;
 const instantSchema = new Schema({
-    creator: {
-        type: Schema.Types.ObjectId,
-        required: true,
-        ref: "User"
-    },
     pending: [{
         type: Schema.Types.ObjectId,
         ref: "User"
@@ -24,22 +19,21 @@ const instantSchema = new Schema({
 
 // Func
 function createVerif(req, res, next){
-    const creator = req.jwt_user_idx;
+    const user_idx = req.jwt_user_idx;
 
-    if(!creator) return res.status(401).json("Available after login");
-    if(!Mongoose.Types.ObjectId.isValid(creator)) return res.status(200).json({result: -1, message: "creator : is_not_idx"});
+    if(!user_idx) return res.status(401).json("Available after login");
 
     next();
 }
 async function create(req, res, next){
-    const creator = req.jwt_user_idx;
+    const user_idx = req.jwt_user_idx;
 
     const newInstant = new Instant.Schema({
-        creator
+        invited: [user_idx]
     });
     
     const instant = await newInstant.save();
-    console.log(`[log] instant_create : {creator: ${instant.creator}, _id: ${instant._id}}`);          
+    console.log(`[log] instant_create : {creator: ${user_idx}, _id: ${instant._id}}`);          
     res.status(200).json({result: 1, idx: instant._id});
 }
 
@@ -47,21 +41,19 @@ function getInstantByUserVerif(req, res, next){
     const user_idx = req.jwt_user_idx;
 
     if(!user_idx) return res.status(401).json("Available after login");
-    if(!Mongoose.Types.ObjectId.isValid(user_idx)) return res.status(200).json({result: -1, message: "user_idx : is_not_idx"});
 
     next();
 }
 async function getInstantByUser(req, res, next){
     const user_idx = req.jwt_user_idx;
 
-    const find_res = await Instant.Schema.find({$or: [{creator: user_idx}, {invited: {$in : user_idx}}]});
+    const find_res = await Instant.Schema.find({invited: {$in : user_idx}});
     res.status(200).json({result: 1, data: find_res});
 }
 function getPendingInstantByUserVerif(req, res, next){
     const user_idx = req.jwt_user_idx;
 
     if(!user_idx) return res.status(401).json("Available after login");
-    if(!Mongoose.Types.ObjectId.isValid(user_idx)) return res.status(200).json({result: -1, message: "user_idx : is_not_idx"});
 
     next();
 }
@@ -74,19 +66,23 @@ async function getPendingInstantByUser(req, res, next){
 
 // 초대하기
 async function invitingUserVerif(req, res, next){
+    const user_idx = req.jwt_user_idx;
     const idx = req.params.idx;
     const users = req.body.users;
+
+    if(!user_idx) return res.status(401).json("Available after login");
 
     if(!idx) return res.status(200).json({result: -1, message: "idx : is_false"});
     if(!users || !users.length) return res.status(200).json({result: -1, message: "users : is_empty"});
     
-    if(!Mongoose.Types.ObjectId.isValid(idx)) return res.status(200).json({result: -1, message: "idx : is_not_idx"});
+
     if(users.filter(u => !Mongoose.Types.ObjectId.isValid(u)).length) return res.status(200).json({result: -1, message: "users : is_not_idx"});
     
     const instant = await Instant.Schema.findById(idx);
     if(!instant) return res.status(200).json({result: -1, message: "idx : instant_is_not_exist"});
 
-    if(users.filter(u => instant.pending.includes(u) || instant.invited.includes(u) || instant.creator === u).length)
+    if(!instant.invited.includes(user_idx)) return res.status(401).json("No Permission");
+    if(users.filter(u => instant.pending.includes(u) || instant.invited.includes(u)).length)
         return res.status(200).json({result: -1, message: "already_invited"});
 
     next();
@@ -105,25 +101,25 @@ async function responseInstantVerif(req, res, next){
     const user_idx = req.jwt_user_idx;
     const state = req.body.state;
 
-    if(!idx) return res.status(200).json({result: -1, message: "idx : is_false"});
     if(!user_idx) return res.status(401).json("Available after login");
+    if(!idx) return res.status(200).json({result: -1, message: "idx : is_false"});
     if(!state) return res.status(200).json({result: -1, message: "state : is_false"});
 
     if(!Mongoose.Types.ObjectId.isValid(idx)) return res.status(200).json({result: -1, message: "idx : is_not_idx"});
     if(!Mongoose.Types.ObjectId.isValid(user_idx)) return res.status(200).json({result: -1, message: "user_idx : is_not_idx"});
 
-    const Instant = await Instant.Schema.findById(idx);
-    if(!Instant) return res.status(200).json({result: -1, message: "idx : Instant_is_not_exist"});
-    if(!Instant.pending.includes(user_idx)) return res.status(200).json({result: -1, message: "user_idx : not_invited"});
-    if(Instant.invited.includes(user_idx) || Instant.creator === user_idx) return res.status(200).json({result: -1, message: "already_invited"});
+    const instant = await Instant.Schema.findById(idx);
+    if(!instant) return res.status(200).json({result: -1, message: "idx : instant_is_not_exist"});
+    if(!instant.pending.includes(user_idx)) return res.status(200).json({result: -1, message: "user_idx : not_invited"});
+    if(instant.invited.includes(user_idx)) return res.status(200).json({result: -1, message: "already_invited"});
 
     if(state !== "accept" && state !== "reject") return res.status(200).json({result: -1, message: `state is only "accept" or "reject"`});
 
     next();
 }
 async function responseInstant(req, res, next){
-    const idx = req.params.idx;
     const user_idx = req.jwt_user_idx;
+    const idx = req.params.idx;
     const state = req.body.state;
 
     await Instant.Schema.updateOne({_id: idx}, {$pull: {pending: user_idx}});

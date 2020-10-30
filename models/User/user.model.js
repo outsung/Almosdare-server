@@ -32,20 +32,17 @@ const userSchema = new Schema({
 });
 
 // Func
-function getUserByIdVerif(req, res, next){
+function getUserByJwtVerif(req, res, next){
     const user_idx = req.jwt_user_idx;
-    const id = req.params.id;
 
     if(!user_idx) return res.status(401).json("Available after login");
-    // if(!id) return res.status(200).json({result: -1, message: "id : is_not_id"});
     
     next();
 }
-async function getUserById(req, res, next){
+async function getUserByJwt(req, res, next){
     const user_idx = req.jwt_user_idx;
-    const id = req.params.id;
-
-    const user = !id ? await User.Schema.findById(user_idx) : await User.Schema.findOne({id: id});
+    
+    const user = await User.Schema.findById(user_idx);
     if(!user) return res.status(200).json({result: -1, message: "Can't find anyone"});
     res.status(200).json({
         result: 1,
@@ -55,6 +52,51 @@ async function getUserById(req, res, next){
     });
 }
 
+function getUserByIdVerif(req, res, next){
+    const user_idx = req.jwt_user_idx;
+    const id = req.params.id;
+
+    if(!user_idx) return res.status(401).json("Available after login");
+    if(!id) return res.status(200).json({result: -1, message: "id : is_not_id"});
+    
+    next();
+}
+async function getUserById(req, res, next){
+    const user_idx = req.jwt_user_idx;
+    const id = req.params.id;
+
+    const user = await User.Schema.findOne({id: id});
+    if(!user) return res.status(200).json({result: -1, message: "Can't find anyone"});
+    res.status(200).json({
+        result: 1,
+        idx: user._id,
+        id: user.id,
+        nickname: user.nickname
+    });
+}
+
+function getUserByIdxVerif(req, res, next){
+    const user_idx = req.jwt_user_idx;
+    const idx = req.params.idx;
+
+    if(!user_idx) return res.status(401).json("Available after login");
+    if(!idx) return res.status(200).json({result: -1, message: "id : is_not_idx"});
+    
+    next();
+}
+async function getUserByIdx(req, res, next){
+    const user_idx = req.jwt_user_idx;
+    const idx = req.params.idx;
+
+    const user = await User.Schema.findById(idx);
+    if(!user) return res.status(200).json({result: -1, message: "Can't find anyone"});
+    res.status(200).json({
+        result: 1,
+        idx: user._id,
+        id: user.id,
+        nickname: user.nickname
+    });
+}
 
 async function signupVerif(req, res, next){
     const id = req.body.id;
@@ -147,7 +189,9 @@ async function allGet(req, res, next){
 const User = {
     Schema: Mongoose.model("User", userSchema),
     Func: {
+        getUserByJwt: [getUserByJwtVerif, getUserByJwt],
         getUserById: [getUserByIdVerif, getUserById],
+        getUserByIdx: [getUserByIdxVerif, getUserByIdx],
         signup: [signupVerif, signup],
         login: [loginVerif, login],
         
