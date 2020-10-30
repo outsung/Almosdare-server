@@ -69,7 +69,7 @@ async function getPendingInstantByUser(req, res, next){
     const user_idx = req.jwt_user_idx;
 
     const find_res = await Instant.Schema.find({pending: {$in : user_idx}});
-    res.status(200).json(find_res);
+    res.status(200).json({result: 1, data: find_res});
 }
 
 // 초대하기
