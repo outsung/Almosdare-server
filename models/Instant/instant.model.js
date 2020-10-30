@@ -83,10 +83,10 @@ async function invitingUserVerif(req, res, next){
     if(!Mongoose.Types.ObjectId.isValid(idx)) return res.status(200).json({result: -1, message: "idx : is_not_idx"});
     if(users.filter(u => !Mongoose.Types.ObjectId.isValid(u)).length) return res.status(200).json({result: -1, message: "users : is_not_idx"});
     
-    const dare = await Dare.Schema.findById(idx);
-    if(!dare) return res.status(200).json({result: -1, message: "idx : dare_is_not_exist"});
+    const instant = await Instant.Schema.findById(idx);
+    if(!instant) return res.status(200).json({result: -1, message: "idx : instant_is_not_exist"});
 
-    if(users.filter(u => dare.pending.includes(u) || dare.invited.includes(u) || dare.creator === u).length)
+    if(users.filter(u => instant.pending.includes(u) || instant.invited.includes(u) || instant.creator === u).length)
         return res.status(200).json({result: -1, message: "already_invited"});
 
     next();
@@ -95,11 +95,11 @@ async function invitingUser(req, res, next){
     const idx = req.params.idx;
     const users = req.body.users;
     
-    await Dare.Schema.updateOne({_id: idx}, {$push: {pending: {$each: users}}});
+    await Instant.Schema.updateOne({_id: idx}, {$push: {pending: {$each: users}}});
     res.status(200).json({result: 1, message: "inviting_user"});
 }
 // 초대받기
-async function responseDareVerif(req, res, next){
+async function responseInstantVerif(req, res, next){
     const idx = req.params.idx;
     const user_idx = req.jwt_user_idx;
     const state = req.body.state;
@@ -111,24 +111,24 @@ async function responseDareVerif(req, res, next){
     if(!Mongoose.Types.ObjectId.isValid(idx)) return res.status(200).json({result: -1, message: "idx : is_not_idx"});
     if(!Mongoose.Types.ObjectId.isValid(user_idx)) return res.status(200).json({result: -1, message: "user_idx : is_not_idx"});
 
-    const dare = await Dare.Schema.findById(idx);
-    if(!dare) return res.status(200).json({result: -1, message: "idx : dare_is_not_exist"});
-    if(!dare.pending.includes(user_idx)) return res.status(200).json({result: -1, message: "user_idx : not_invited"});
-    if(dare.invited.includes(user_idx) || dare.creator === user_idx) return res.status(200).json({result: -1, message: "already_invited"});
+    const Instant = await Instant.Schema.findById(idx);
+    if(!Instant) return res.status(200).json({result: -1, message: "idx : Instant_is_not_exist"});
+    if(!Instant.pending.includes(user_idx)) return res.status(200).json({result: -1, message: "user_idx : not_invited"});
+    if(Instant.invited.includes(user_idx) || Instant.creator === user_idx) return res.status(200).json({result: -1, message: "already_invited"});
 
     if(state !== "accept" && state !== "reject") return res.status(200).json({result: -1, message: `state is only "accept" or "reject"`});
 
     next();
 }
-async function responseDare(req, res, next){
+async function responseInstant(req, res, next){
     const idx = req.params.idx;
     const user_idx = req.jwt_user_idx;
     const state = req.body.state;
 
-    await Dare.Schema.updateOne({_id: idx}, {$pull: {pending: user_idx}});
-    if(state === "accept") await Dare.Schema.updateOne({_id: idx}, {$push: {invited: user_idx}});
+    await Instant.Schema.updateOne({_id: idx}, {$pull: {pending: user_idx}});
+    if(state === "accept") await Instant.Schema.updateOne({_id: idx}, {$push: {invited: user_idx}});
 
-    res.status(200).json({result: 1, message: "responded_dare"});
+    res.status(200).json({result: 1, message: "responded_instant"});
 }
 
 // test

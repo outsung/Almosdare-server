@@ -32,7 +32,7 @@ const userSchema = new Schema({
 });
 
 // Func
-function getUserVerif(req, res, next){
+function getUserByIdVerif(req, res, next){
     const user_idx = req.jwt_user_idx;
     const id = req.params.id;
 
@@ -41,7 +41,7 @@ function getUserVerif(req, res, next){
     
     next();
 }
-async function getUser(req, res, next){
+async function getUserById(req, res, next){
     const user_idx = req.jwt_user_idx;
     const id = req.params.id;
 
@@ -145,7 +145,7 @@ async function allGet(req, res, next){
 const User = {
     Schema: Mongoose.model("User", userSchema),
     Func: {
-        get: [getUserVerif, getUser],
+        getUserById: [getUserByIdVerif, getUserById],
         signup: [signupVerif, signup],
         login: [loginVerif, login],
         
