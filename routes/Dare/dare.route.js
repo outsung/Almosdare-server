@@ -9,7 +9,7 @@ Router.route('/:idx/inviting').post(DateModel.Func.invitingUser);
 Router.route('/:idx/response/').post(DateModel.Func.responseDare);
 
 // test
-Router.route('/').delete(DateModel.Func.allDelete);
-Router.route('/').get(DateModel.Func.allGet);
+Router.route('/test').delete(DateModel.Func.allDelete);
+Router.route('/test').get(DateModel.Func.allGet);
 
 module.exports = Router;

@@ -10,8 +10,8 @@ Router.route('/login').post(UserModel.Func.login);
 Router.route('/signup').post(UserModel.Func.signup);
 
 // test
-Router.route('/').delete(UserModel.Func.allDelete);
-Router.route('/').get(UserModel.Func.allGet);
+Router.route('/test').delete(UserModel.Func.allDelete);
+Router.route('/test').get(UserModel.Func.allGet);
 
 
 module.exports = Router;
