@@ -96,6 +96,7 @@ async function invitingUser(req, res, next){
     const users = req.body.users;
     
     await Instant.Schema.updateOne({_id: idx}, {$push: {pending: {$each: users}}});
+    console.log(`[log] instant_inviting_user : {users: ${users}}`);          
     res.status(200).json({result: 1, message: "inviting_user"});
 }
 // 초대받기
