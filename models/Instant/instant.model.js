@@ -38,9 +38,9 @@ async function create(req, res, next){
         creator
     });
     
-    await newInstant.save();
-    console.log(`[log] instant_create : {creator: ${creator}}`);          
-    res.status(200).json({result: 1, message : "created_instant"});
+    const idx = await newInstant.save();
+    console.log(`[log] instant_create : {creator: ${creator}, idx: ${idx}}`);          
+    res.status(200).json({result: 1, idx: idx});
 }
 
 function getInstantByUserVerif(req, res, next){

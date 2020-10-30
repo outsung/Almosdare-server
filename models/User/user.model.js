@@ -49,6 +49,7 @@ async function getUserById(req, res, next){
     if(!user) return res.status(200).json({result: -1, message: "Can't find anyone"});
     res.status(200).json({
         result: 1,
+        idx: user._id,
         id: user.id,
         nickname: user.nickname
     });

@@ -6,8 +6,6 @@ const Router = require('express').Router();
 Router.route('/test').delete(UserModel.Func.allDelete);
 Router.route('/test').get(UserModel.Func.allGet);
 
-
-
 Router.route('/').get(UserModel.Func.getUserById);
 // Router.route('/:idx').get(UserModel.Func.get);
 Router.route('/:id').get(UserModel.Func.getUserById);
