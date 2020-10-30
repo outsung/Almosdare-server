@@ -48,6 +48,7 @@ async function getUserById(req, res, next){
     const user = !id ? await User.Schema.findById(user_idx) : await User.Schema.findOne({id: id});
     if(!user) return res.status(200).json({result: -1, message: "Can't find anyone"});
     res.status(200).json({
+        result: 1,
         id: user.id,
         nickname: user.nickname
     });
