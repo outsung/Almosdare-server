@@ -21,7 +21,7 @@ const userSchema = new Schema({
         type: String,
         required: true
     },
-    name: {
+    nickname: {
         type: String,
         minlength: 2,
         trim: true,
@@ -34,29 +34,30 @@ const userSchema = new Schema({
 // Func
 function getUserVerif(req, res, next){
     const user_idx = req.jwt_user_idx;
-    const idx = req.params.idx;
+    const id = req.params.id;
 
     if(!user_idx) return res.status(401).json("Available after login");
-    if(idx && !Mongoose.Types.ObjectId.isValid(idx)) return res.status(200).json({result: -1, message: "idx : is_not_idx"});
+    // if(!id) return res.status(200).json({result: -1, message: "id : is_not_id"});
     
     next();
 }
 async function getUser(req, res, next){
     const user_idx = req.jwt_user_idx;
-    const idx = req.params.idx;
+    const id = req.params.id;
 
-    const user = await User.Schema.findById(idx || user_idx);
-    if(!user) return res.status(200).json({});
+    const user = !id ? await User.Schema.findById(user_idx) : await User.Schema.findOne({id: id});
+    if(!user) return res.status(200).json({result: -1, message: "Can't find anyone"});
     res.status(200).json({
         id: user.id,
-        name: user.name
+        nickname: user.nickname
     });
 }
+
 
 async function signupVerif(req, res, next){
     const id = req.body.id;
     const password = req.body.password;
-    const name = req.body.name;
+    const nickname = req.body.nickname;
 
     if(!id) return res.status(200).json({result: -1, message: "id : is_false"});
     if(!password) return res.status(200).json({result: -1, message: "password : is_false"});
@@ -65,10 +66,9 @@ async function signupVerif(req, res, next){
     next();
 }
 function signup(req, res, next){
-    console.log('signup request')
     const id = req.body.id;
     const raw_password = req.body.password;
-    const name = req.body.nickname;
+    const nickname = req.body.nickname;
             
     Crypto.randomBytes(64, (err, buf) => {
         const salt = buf.toString("base64");
@@ -78,11 +78,11 @@ function signup(req, res, next){
                 id,
                 password,
                 salt,
-                name
+                nickname
             });
 
             await newUser.save();
-            console.log(`[log] signup : {id: ${id}, name: ${name}}`);          
+            console.log(`[log] signup : {id: ${id}, nickname: ${nickname}}`);          
             res.status(200).json({result: 1, message : "user_added"});
         });
     })
@@ -98,7 +98,6 @@ function loginVerif(req, res, next){
     next();
 }
 async function login(req, res, next){
-    console.log('login request')
     const id = req.body.id;
     const password = req.body.password;
 
@@ -116,12 +115,12 @@ async function login(req, res, next){
         });
 
         
-        console.log(`[log] login : {id: ${user.id}, name: ${user.name}}`);
+        console.log(`[log] login : {id: ${user.id}, nickname: ${user.nickname}}`);
         res.status(200).json({
             result: 1,
             idx: user._id,
             id: user.id,
-            name: user.name,
+            nickname: user.nickname,
             accessToken: token,
             tokenType: "Bearer",
         });

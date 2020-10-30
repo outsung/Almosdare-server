@@ -4,7 +4,7 @@ const Router = require('express').Router();
 
 Router.route('/').post(DateModel.Func.create);
 Router.route('/invited/').get(DateModel.Func.getDareByUser);
-Router.route('/pending/').get(DateModel.Func.getPendingDareByUser)
+Router.route('/pending/').get(DateModel.Func.getPendingDareByUser);
 Router.route('/:idx/inviting').post(DateModel.Func.invitingUser);
 Router.route('/:idx/response/').post(DateModel.Func.responseDare);
 
