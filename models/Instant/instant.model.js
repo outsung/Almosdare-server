@@ -77,10 +77,8 @@ async function invitingUserVerif(req, res, next){
     const idx = req.params.idx;
     const users = req.body.users;
 
-    console.log("req : ", req);
-
     if(!idx) return res.status(200).json({result: -1, message: "idx : is_false"});
-    if(!users.length) return res.status(200).json({result: -1, message: "users : is_empty"});
+    if(!users || !users.length) return res.status(200).json({result: -1, message: "users : is_empty"});
     
     if(!Mongoose.Types.ObjectId.isValid(idx)) return res.status(200).json({result: -1, message: "idx : is_not_idx"});
     if(users.filter(u => !Mongoose.Types.ObjectId.isValid(u)).length) return res.status(200).json({result: -1, message: "users : is_not_idx"});
@@ -98,7 +96,7 @@ async function invitingUser(req, res, next){
     const users = req.body.users;
     
     await Instant.Schema.updateOne({_id: idx}, {$push: {pending: {$each: users}}});
-    console.log(`[log] instant_inviting_user : {users: ${users}}`);          
+    console.log(`[log] instant_inviting_user : {_id: ${idx}, users: ${users.join(" ")}}`);          
     res.status(200).json({result: 1, message: "inviting_user"});
 }
 // 초대받기
