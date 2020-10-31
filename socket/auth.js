@@ -5,6 +5,7 @@ const Jwt = require("jsonwebtoken");
 function include_jwt_info(req, res, next){
     
     console.log("req : ", req);
+    req.jwt_user_idx = null; return next();
     if(!req || !req.keys().includes("authorization")){ req.jwt_user_idx = null; return next(); }
 
     const authorization = req.keys().includes("authorization");
