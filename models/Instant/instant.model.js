@@ -76,13 +76,13 @@ async function invitingUserVerif(req, res, next){
     if(!users || !users.length) return res.status(200).json({result: -1, message: "users : is_empty"});
     
 
-    if(users.filter(u => !Mongoose.Types.ObjectId.isValid(u)).length) return res.status(200).json({result: -1, message: "users : is_not_idx"});
+    if(users.filter(u => !Mongoose.Types.ObjectId.isValid(u.idx)).length) return res.status(200).json({result: -1, message: "users : is_not_idx"});
     
     const instant = await Instant.Schema.findById(idx);
     if(!instant) return res.status(200).json({result: -1, message: "idx : instant_is_not_exist"});
 
     if(!instant.invited.includes(user_idx)) return res.status(401).json("No Permission");
-    if(users.filter(u => instant.pending.includes(u) || instant.invited.includes(u)).length)
+    if(users.filter(u => instant.pending.includes(u.idx) || instant.invited.includes(u.idx)).length)
         return res.status(200).json({result: -1, message: "already_invited"});
 
     next();
@@ -91,7 +91,7 @@ async function invitingUser(req, res, next){
     const idx = req.params.idx;
     const users = req.body.users;
     
-    await Instant.Schema.updateOne({_id: idx}, {$push: {pending: {$each: users}}});
+    await Instant.Schema.updateOne({_id: idx}, {$push: {pending: {$each: users.map(u => u.idx)}}});
     console.log(`[log] instant_inviting_user : {_id: ${idx}, users: ${users.join(" ")}}`);          
     res.status(200).json({result: 1, message: "inviting_user"});
 }
