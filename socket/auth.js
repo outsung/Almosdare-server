@@ -19,4 +19,4 @@ function include_jwt_info(req, res, next){
 }
 
 
-module.exports = [include_jwt_info];
+module.exports = include_jwt_info;
