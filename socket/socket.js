@@ -22,7 +22,7 @@ const wrap = middleware => (socket, next) => middleware(socket.request, {}, next
 module.exports = (io) => {
     io.on("connection", (socket) => {
         socket.use(wrap(Auth));
-        
+
         console.log(`[log] socket_initiated : {idx: ${socket.request.jwt_user_idx}}`);
         
         socket.on("dareJoin", (dare_idx) => {
