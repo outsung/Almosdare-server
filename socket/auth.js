@@ -3,9 +3,12 @@
 const Jwt = require("jsonwebtoken");
 
 function include_jwt_info(req, res, next){
+    
     console.log("req : ", req);
-    const authorization = req.keys().includes("authorization") ? req.authorization : null;
-    console.log(`auth authorization : {authorization: ${req.keys().includes(authorization)}, req: ${req}}`);
+    if(!req || !req.keys().includes("authorization")){ req.jwt_user_idx = null; return next(); }
+
+    const authorization = req.keys().includes("authorization");
+    console.log(`auth authorization : {authorization: ${authorization}, req: ${req}}`);
 
     if(!authorization || authorization.indexOf("Bearer ") === -1){ req.jwt_user_idx = null; return next(); }
 
