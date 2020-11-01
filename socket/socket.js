@@ -11,24 +11,24 @@ module.exports = (io) => {
 
         console.log(`[log] socket_initiated : {idx: ${socket.request.jwt_user_idx}}`);
         
-        socket.on("dareJoin", (dare_idx) => {
-            socket.join(dare_idx);
-            io.to(dare_idx).emit("creat_user", socket.request.jwt_user_idx);
-        });
-        socket.on("instantJoin", (instant_idx) => {
-            socket.join(instant_idx);
-            io.to(instant_idx).emit("creat_user", socket.request.jwt_user_idx);
-        });
+        // room to send
+        socket.on("joinRoomToSend", (idx) => socket.join(`send_${idx}`));
+        socket.on("leaveRoomToSend", (idx) => socket.leave(`send_${idx}`));
 
-        socket.on("cilentToServerSendMyLocationForRoomByJoin", (data) => {
-            console.log(`[log] cilentToServerSendMyLocationByJoin : {idx: ${socket.request.jwt_user_idx}, data: ${data}}`);
-            io.to(instant_idx).emit("creat_user", socket.request.jwt_user_idx);
+        // room to recv
+        socket.on("joinRoomToRecv", (idx) => socket.join(`recv_${idx}`));
+        socket.on("leaveRoomToRecv", (idx) => socket.leave(`recv_${idx}`));
+
+
+        socket.on("memberLocation", (location) => {
+            console.log(`[log] memberLocation : {idx: ${socket.request.jwt_user_idx}, location: ${location}, rooms: ${socket.rooms}}`);
+            const roomsToSend = socket.rooms.filter(room => room.indexOf("send_") !== -1);
+            const roomsToRecv = roomsToSend.map(room => room.replace("send_", "recv_"));
+
+            let _io = io;
+            for(let i = roomsToRecv.length; i--; _io = _io.to(roomsToRecv[i - 1])); 
             
-            // let _io = io;
-            // for(let i = 0; i < rooms; i++){
-            //     _io = _io.to(rooms[i]);
-            // }
-            // _io.emit("sendMemberLocation", data);
+            _io.broadcast.emit("changedOtherMemberLocation", {idx: socket.request.jwt_user_idx, location: location});
         });
         
 
