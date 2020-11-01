@@ -24,6 +24,8 @@ module.exports = (io) => {
             const rooms = Object.keys(socket.rooms);
             const roomsToSend = rooms.filter(room => room.indexOf("send_") !== -1);
             const roomsToRecv = roomsToSend.map(room => room.replace("send_", "recv_"));
+            console.log(rooms, roomsToSend, roomsToRecv)
+
             console.log(`[log] sendMemberLocation : {idx: ${socket.jwt_user_idx}, location: ${location}, rooms: ${roomsToSend}}`);
 
             let _io = io;
