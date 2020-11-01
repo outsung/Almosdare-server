@@ -8,8 +8,8 @@ module.exports = (io) => {
     
     io.use(Auth);
     io.on("connection", (socket) => {
-
-        console.log(`[log] socket_initiated : {idx: ${socket.request.jwt_user_idx}}`);
+        socket.jwt_user_idx
+        console.log(`[log] socket_initiated : {idx: ${socket.jwt_user_idx}}`);
         
         // room to send
         socket.on("joinRoomToSend", (idx) => socket.join(`send_${idx}`));
@@ -21,14 +21,14 @@ module.exports = (io) => {
 
 
         socket.on("memberLocation", (location) => {
-            console.log(`[log] memberLocation : {idx: ${socket.request.jwt_user_idx}, location: ${location}, rooms: ${socket.rooms}}`);
+            console.log(`[log] memberLocation : {idx: ${socket.jwt_user_idx}, location: ${location}, rooms: ${socket.rooms}}`);
             const roomsToSend = socket.rooms.filter(room => room.indexOf("send_") !== -1);
             const roomsToRecv = roomsToSend.map(room => room.replace("send_", "recv_"));
 
             let _io = io;
             for(let i = roomsToRecv.length; i--; _io = _io.to(roomsToRecv[i - 1])); 
             
-            _io.broadcast.emit("changedOtherMemberLocation", {idx: socket.request.jwt_user_idx, location: location});
+            _io.broadcast.emit("changedOtherMemberLocation", {idx: socket.jwt_user_idx, location: location});
         });
         
 
