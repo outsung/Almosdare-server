@@ -9,12 +9,10 @@ function include_jwt_info(socket, next){
 
     const token = authorization.split(" ")[1];
     
-    console.log("token: ", token);
     Jwt.verify(token, process.env.AUTH_SALT, (err, jwt_user) => {
         if(err){ socket.jwt_user_idx = null; return next(); }
         
         socket.jwt_user_idx = jwt_user.idx || null;
-        console.log("token_user: ", jwt_user);
         next();
     });
 }

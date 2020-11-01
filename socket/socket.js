@@ -20,8 +20,8 @@ module.exports = (io) => {
         socket.on("leaveRoomToRecv", (idx) => socket.leave(`recv_${idx}`));
 
 
-        socket.on("memberLocation", (location) => {
-            console.log(`[log] memberLocation : {idx: ${socket.jwt_user_idx}, location: ${location}, rooms: ${socket.rooms}}`);
+        socket.on("sendMemberLocation", (location) => {
+            console.log(`[log] sendMemberLocation : {idx: ${socket.jwt_user_idx}, location: ${location}, rooms: ${socket.rooms}}`);
             const roomsToSend = socket.rooms.filter(room => room.indexOf("send_") !== -1);
             const roomsToRecv = roomsToSend.map(room => room.replace("send_", "recv_"));
 
