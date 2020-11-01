@@ -89,9 +89,9 @@ async function invitingUserVerif(req, res, next){
 }
 async function invitingUser(req, res, next){
     const idx = req.params.idx;
-    const users = req.body.users;
+    const users = req.body.users.map(u => u.idx);
     
-    await Instant.Schema.updateOne({_id: idx}, {$push: {pending: {$each: users.map(u => u.idx)}}});
+    await Instant.Schema.updateOne({_id: idx}, {$push: {pending: {$each: users}}});
     console.log(`[log] instant_inviting_user : {_id: ${idx}, users: ${users.join(" ")}}`);          
     res.status(200).json({result: 1, message: "inviting_user"});
 }
