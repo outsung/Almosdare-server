@@ -1,23 +1,8 @@
-
-// const member_location = {};
-
-// module.exports = (io) => {
-//     io.on("connection", (socket) => {
-//         console.log("Socket initiated!");
-//         socket.on("getMemberLocation", (data) => {
-//             console.log('got request');
-//             member_location[data.name] = data.location
-//             io.to('123').emit("sendMemberLocation", member_location);
-//         });
-//         socket.on("join", (room) => {
-//             socket.join(room);
-//         })
-//     });
-// }
-
 const Auth = require('./auth');
 
-const wrap = middleware => (socket, next) => middleware(socket.request, {}, next);
+// test
+const member_location = {};
+
 
 module.exports = (io) => {
     
@@ -45,5 +30,16 @@ module.exports = (io) => {
             // }
             // _io.emit("sendMemberLocation", data);
         });
+        
+
+        // test 
+        socket.on("getMemberLocation", (data) => {
+            console.log('got request');
+            member_location[data.name] = data.location
+            io.to('123').emit("sendMemberLocation", member_location);
+        });
+        socket.on("join", (room) => {
+            socket.join(room);
+        })
     });
 }
