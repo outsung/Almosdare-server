@@ -8,7 +8,6 @@ module.exports = (io) => {
     
     io.use(Auth);
     io.on("connection", (socket) => {
-        socket.jwt_user_idx
         console.log(`[log] socket_initiated : {idx: ${socket.jwt_user_idx}}`);
         
         // room to send
