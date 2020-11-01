@@ -21,15 +21,16 @@ module.exports = (io) => {
 
 
         socket.on("sendMemberLocation", (location) => {
-            console.log(`[log] sendMemberLocation : {idx: ${socket.jwt_user_idx}, location: ${location}, rooms: ${socket.rooms.keys()}}`);
-            console.log("socket.rooms: ", socket.rooms);
-            const roomsToSend = socket.rooms.keys().filter(room => room.indexOf("send_") !== -1);
+            const rooms = Object.keys(socket.rooms);
+            const roomsToSend = rooms.filter(room => room.indexOf("send_") !== -1);
             const roomsToRecv = roomsToSend.map(room => room.replace("send_", "recv_"));
+            console.log(`[log] sendMemberLocation : {idx: ${socket.jwt_user_idx}, location: ${location}, rooms: ${roomsToSend}}`);
 
             let _io = io;
             for(let i = roomsToRecv.length; i--; _io = _io.to(roomsToRecv[i - 1])); 
             
-            _io.broadcast.emit("changedOtherMemberLocation", {idx: socket.jwt_user_idx, location: location});
+            console.log(`[log] changedOtherMemberLocation : {idx: ${socket.jwt_user_idx}, location: ${location}, rooms: ${roomsToRecv}}`);
+            _io.emit("changedOtherMemberLocation", {idx: socket.jwt_user_idx, location: location});
         });
         
 
