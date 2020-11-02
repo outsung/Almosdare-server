@@ -50,7 +50,7 @@ async function getByTime(req, res, next){
     const before = req.params.before;
     const limit = req.params.limit;
     
-    const find_res = await Timeline.find({$and: [{createdAt: {$lte: before || new Date.now()}}, {user: user_idx}]}).limit(limit);
+    const find_res = await Timeline.find({$and: [{createdAt: {$lte: before || Date.now()}}, {user: user_idx}]}).limit(limit);
     
     res.status(200).json({result: 1, data: find_res});
 }
