@@ -19,7 +19,7 @@ const timelineSchema = new Schema({
 });
 
 // Func
-function add(user_idx, message){
+async function add(user_idx, message){
     if(!user_idx) return;
     if(!message) return;
     
