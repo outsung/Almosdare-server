@@ -70,8 +70,8 @@ async function allGet(req, res, next){
 // exports
 const Timeline = {
     Schema: Mongoose.model("Timeline", timelineSchema),
+    add: add,
     Func: {
-        add: add,
         getByTime: [getByTimeVerif, getByTime],
         allDelete: [allDelete],
         allGet: [allGet]
