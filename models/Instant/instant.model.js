@@ -1,6 +1,10 @@
 // require
 const Mongoose = require('mongoose');
 
+// timeline
+const TimelineModel = require('../../models/Timeline/timeline.model');
+
+
 // Schema
 const Schema = Mongoose.Schema;
 const instantSchema = new Schema({
@@ -33,6 +37,7 @@ async function create(req, res, next){
     });
     
     const instant = await newInstant.save();
+    TimelineModel.add(user_idx, `[log] instant_create : {creator: ${user_idx}, _id: ${instant._id}}`);
     console.log(`[log] instant_create : {creator: ${user_idx}, _id: ${instant._id}}`);          
     res.status(200).json({result: 1, idx: instant._id});
 }
@@ -88,10 +93,12 @@ async function invitingUserVerif(req, res, next){
     next();
 }
 async function invitingUser(req, res, next){
+    const user_idx = req.jwt_user_idx;
     const idx = req.params.idx;
     const users = req.body.users.map(u => u.idx);
     
     await Instant.Schema.updateOne({_id: idx}, {$push: {pending: {$each: users}}});
+    TimelineModel.add(user_idx, `[log] instant_inviting_user : {_id: ${idx}, users: ${users.join(" ")}}`);
     console.log(`[log] instant_inviting_user : {_id: ${idx}, users: ${users.join(" ")}}`);          
     res.status(200).json({result: 1, message: "inviting_user"});
 }

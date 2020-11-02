@@ -3,6 +3,11 @@ const Mongoose = require('mongoose');
 const Jwt = require("jsonwebtoken");
 const Crypto = require('crypto');
 
+// timeline
+const TimelineModel = require('../../models/Timeline/timeline.model');
+
+
+
 // Schema
 const Schema = Mongoose.Schema;
 const userSchema = new Schema({
@@ -125,8 +130,10 @@ function signup(req, res, next){
                 nickname
             });
 
-            await newUser.save();
-            console.log(`[log] signup : {id: ${id}, nickname: ${nickname}}`);          
+            const user = await newUser.save();
+            TimelineModel.add(user._id, `[log] signup : {id: ${user.id}, nickname: ${user.nickname}}`);
+            console.log(`[log] signup : {id: ${user.id}, nickname: ${user.nickname}}`);
+                      
             res.status(200).json({result: 1, message : "user_added"});
         });
     })
@@ -159,6 +166,7 @@ async function login(req, res, next){
         });
 
         
+        TimelineModel.add(user._id, `[log] login : {id: ${user.id}, nickname: ${user.nickname}}`);
         console.log(`[log] login : {id: ${user.id}, nickname: ${user.nickname}}`);
         res.status(200).json({
             result: 1,
