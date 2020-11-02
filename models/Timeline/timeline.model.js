@@ -45,7 +45,7 @@ function getByTimeVerif(req, res, next){
     
     next();
 }
-function getByTime(req, res, next){
+async function getByTime(req, res, next){
     const user_idx = req.jwt_user_idx;
     const before = req.params.before;
     const limit = req.params.limit;
