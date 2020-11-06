@@ -39,7 +39,7 @@ async function getAppointment(req, res, next){
                 }
                 appointment[t][i].invited[j] = users[idx];
             }
-            for(let j = 0; j < appointment[t].pending.length; j++){
+            for(let j = 0; j < appointment[t][i].pending.length; j++){
                 const idx = appointment[t][i].pending[j];
                 if(!users[idx]){
                     const user = await UserModel.Schema.findById(idx);
