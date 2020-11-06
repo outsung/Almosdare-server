@@ -19,7 +19,7 @@ const timelineSchema = new Schema({
 });
 
 // Func
-async function addTimeline(user_idx, message){
+async function add(user_idx, message){
     if(!user_idx) return;
     if(!message) return;
     
@@ -38,7 +38,7 @@ async function addTimeline(user_idx, message){
 const Timeline = {
     Schema: Mongoose.model("Timeline", timelineSchema),
     Func: {
-        addTimeline: addTimeline,
+        add: add,
     }
 }
 module.exports = Timeline;
