@@ -1,19 +1,19 @@
 // Require
-const UserModel = require('../../models/User/user.model');
 const Router = require('express').Router();
+const UserMiddleware = require('../../middlewares/User/user.middleware');
 
 // test
-Router.route('/test').delete(UserModel.Func.allDelete);
-Router.route('/test').get(UserModel.Func.allGet);
+Router.route('/test').delete(UserMiddleware.allDelete);
+Router.route('/test').get(UserMiddleware.allGet);
 
 
 
-Router.route('/').get(UserModel.Func.getUserByJwt);
-Router.route('/id/:id').get(UserModel.Func.getUserById);
-Router.route('/idx/:idx').get(UserModel.Func.getUserByIdx);
+Router.route('/').get(UserMiddleware.getUserByJwt);
+Router.route('/id/:id').get(UserMiddleware.getUserById);
+Router.route('/idx/:idx').get(UserMiddleware.getUserByIdx);
 
-Router.route('/login').post(UserModel.Func.login);
-Router.route('/signup').post(UserModel.Func.signup);
+Router.route('/login').post(UserMiddleware.login);
+Router.route('/signup').post(UserMiddleware.signup);
 
 
 

@@ -1,15 +1,16 @@
 // Require
-const InstantModel = require('../../models/Instant/instant.model');
 const Router = require('express').Router();
+const InstantMiddleware = require('../../middlewares/Instant/instant.middleware');
 
 // test
-Router.route('/test').delete(InstantModel.Func.allDelete);
-Router.route('/test').get(InstantModel.Func.allGet);
+Router.route('/test').delete(InstantMiddleware.allDelete);
+Router.route('/test').get(InstantMiddleware.allGet);
 
-Router.route('/').post(InstantModel.Func.create);
-Router.route('/invited').get(InstantModel.Func.getInstantByUser);
-Router.route('/pending').get(InstantModel.Func.getPendingInstantByUser);
-Router.route('/:idx/inviting').post(InstantModel.Func.invitingUser);
-Router.route('/:idx/response').post(InstantModel.Func.responseInstant);
+Router.route('/').post(InstantMiddleware.create);
+// Router.route('/invited').get(InstantMiddleware.getInstantByUser);
+// Router.route('/pending').get(InstantMiddleware.getPendingInstantByUser);
+Router.route('/:idx/inviting').post(InstantMiddleware.invitingUser);
+Router.route('/:idx/response').post(InstantMiddleware.responseInstant);
+
 
 module.exports = Router;
