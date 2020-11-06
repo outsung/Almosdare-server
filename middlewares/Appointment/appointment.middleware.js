@@ -29,7 +29,7 @@ async function getAppointment(req, res, next){
         for(let i = 0; i < appointment[t].length; i++){
             for(let j = 0; j < appointment[t][i].invited.length; j++){
                 const idx = appointment[t][i].invited[j];
-                if(!users.inclusdes(idx)){
+                if(!users.includes(idx)){
                     const user = await UserModel.Schema.findById(idx);
                     users[idx] = {
                         idx: user._id,
@@ -41,7 +41,7 @@ async function getAppointment(req, res, next){
             }
             for(let j = 0; j < appointment[t].pending.length; j++){
                 const idx = appointment[t][i].pending[j];
-                if(!users.inclusdes(idx)){
+                if(!users.includes(idx)){
                     const user = await UserModel.Schema.findById(idx);
                     users[idx] = {
                         idx: user._id,
