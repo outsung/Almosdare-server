@@ -22,7 +22,7 @@ const server = app.listen(port, () => {
 });
 // socket start
 const io = socketIo(server);
-require('./socket/socket')(io);
+require('./src/socket/socket')(io);
 
 // server routes   
-app.use('/api', require('./routes/route'));
+app.use('/api', require('./src/routes/route'));
