@@ -1,4 +1,5 @@
 // require
+const Mongoose = require('mongoose');
 const DareModel = require('../../models/Dare/dare.model');
 const TimelineModel = require('../../models/Timeline/timeline.model');
 
