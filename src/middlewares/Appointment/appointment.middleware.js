@@ -5,7 +5,7 @@ const UserModel = require('../../models/User/user.model');
 
 
 // middleware
-async function getAppointmentVerif(req, res, next){
+async function getAppointmentVerify(req, res, next){
     const user_idx = req.jwt_user_idx;
 
     if(!user_idx) return res.status(401).json("Available after login");
@@ -66,7 +66,7 @@ async function getAppointment(req, res, next){
 
 
 const Appointment = {
-    getAppointment: [getAppointmentVerif, getAppointment],
+    getAppointment: [getAppointmentVerify, getAppointment],
 }
 
 module.exports = Appointment;

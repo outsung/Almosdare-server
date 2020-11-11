@@ -5,7 +5,7 @@ const TimelineModel = require('../../models/Timeline/timeline.model');
 
 
 // middleware
-function createVerif(req, res, next){
+function createVerify(req, res, next){
     const creator = req.jwt_user_idx;
     const place = req.body.place;
     const date = req.body.date;
@@ -34,7 +34,7 @@ async function create(req, res, next){
 }
 
 // 수정예정
-async function invitingUserVerif(req, res, next){
+async function invitingUserVerify(req, res, next){
     const idx = req.params.idx;
     const users = req.body.users;
 
@@ -60,7 +60,7 @@ async function invitingUser(req, res, next){
     res.status(200).json({result: 1, message: "inviting_user"});
 }
 
-async function responseDareVerif(req, res, next){
+async function responseDareVerify(req, res, next){
     const idx = req.params.idx;
     const user_idx = req.jwt_user_idx;
     const state = req.body.state;
@@ -109,9 +109,9 @@ async function allGet(req, res, next){
 
 // exports
 const Dare = {
-    create: [createVerif, create],
-    invitingUser: [invitingUserVerif, invitingUser],
-    responseDare: [responseDareVerif, responseDare],
+    create: [createVerify, create],
+    invitingUser: [invitingUserVerify, invitingUser],
+    responseDare: [responseDareVerify, responseDare],
 
     allDelete: [allDelete],
     allGet: [allGet]

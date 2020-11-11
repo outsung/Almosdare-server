@@ -6,7 +6,7 @@ const TimelineModel = require("../../models/Timeline/timeline.model");
 
 
 // middleware
-function getUserByJwtVerif(req, res, next){
+function getUserByJwtVerify(req, res, next){
     const user_idx = req.jwt_user_idx;
 
     if(!user_idx) return res.status(401).json("Available after login");
@@ -26,7 +26,7 @@ async function getUserByJwt(req, res, next){
     });
 }
 
-function getUserByIdVerif(req, res, next){
+function getUserByIdVerify(req, res, next){
     const user_idx = req.jwt_user_idx;
     const id = req.params.id;
 
@@ -49,7 +49,7 @@ async function getUserById(req, res, next){
     });
 }
 
-function getUserByIdxVerif(req, res, next){
+function getUserByIdxVerify(req, res, next){
     const user_idx = req.jwt_user_idx;
     const idx = req.params.idx;
 
@@ -72,7 +72,7 @@ async function getUserByIdx(req, res, next){
     });
 }
 
-async function signupVerif(req, res, next){
+async function signupVerify(req, res, next){
     const id = req.body.id;
     const password = req.body.password;
     const nickname = req.body.nickname;
@@ -108,7 +108,7 @@ function signup(req, res, next){
     })
 }
 
-function loginVerif(req, res, next){
+function loginVerify(req, res, next){
     const id = req.body.id;
     const password = req.body.password;
 
@@ -162,11 +162,11 @@ async function allGet(req, res, next){
 }
 
 const User = {
-    getUserByJwt: [getUserByJwtVerif, getUserByJwt],
-    getUserById: [getUserByIdVerif, getUserById],
-    getUserByIdx: [getUserByIdxVerif, getUserByIdx],
-    signup: [signupVerif, signup],
-    login: [loginVerif, login],
+    getUserByJwt: [getUserByJwtVerify, getUserByJwt],
+    getUserById: [getUserByIdVerify, getUserById],
+    getUserByIdx: [getUserByIdxVerify, getUserByIdx],
+    signup: [signupVerify, signup],
+    login: [loginVerify, login],
 
     allDelete: [allDelete],
     allGet: [allGet]

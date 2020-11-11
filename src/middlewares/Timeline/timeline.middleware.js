@@ -3,7 +3,7 @@ const TimelineModel = require('../../models/Timeline/timeline.model');
 
 
 // middleware
-function getByTimeVerif(req, res, next){
+function getByTimeVerify(req, res, next){
     const user_idx = req.jwt_user_idx;
     const before = req.params.time;
     const limit = req.params.limit;
@@ -39,7 +39,7 @@ async function allGet(req, res, next){
 
 // exports
 const Timeline = {
-    getByTime: [getByTimeVerif, getByTime],
+    getByTime: [getByTimeVerify, getByTime],
 
     allDelete: [allDelete],
     allGet: [allGet]

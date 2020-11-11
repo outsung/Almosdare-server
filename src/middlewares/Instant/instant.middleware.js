@@ -5,7 +5,7 @@ const TimelineModel = require('../../models/Timeline/timeline.model');
 
 
 // middleware
-function createVerif(req, res, next){
+function createVerify(req, res, next){
     const user_idx = req.jwt_user_idx;
 
     if(!user_idx) return res.status(401).json("Available after login");
@@ -25,7 +25,7 @@ async function create(req, res, next){
     res.status(200).json({result: 1, idx: instant._id});
 }
 
-async function invitingUserVerif(req, res, next){
+async function invitingUserVerify(req, res, next){
     const user_idx = req.jwt_user_idx;
     const idx = req.params.idx;
     const users = req.body.users;
@@ -59,7 +59,7 @@ async function invitingUser(req, res, next){
 }
 
 // 수정예정
-async function responseInstantVerif(req, res, next){
+async function responseInstantVerify(req, res, next){
     const idx = req.params.idx;
     const user_idx = req.jwt_user_idx;
     const state = req.body.state;
@@ -108,9 +108,9 @@ async function allGet(req, res, next){
 
 // exports
 const Instant = {
-    create: [createVerif, create],
-    invitingUser: [invitingUserVerif, invitingUser],
-    responseInstant: [responseInstantVerif, responseInstant],
+    create: [createVerify, create],
+    invitingUser: [invitingUserVerify, invitingUser],
+    responseInstant: [responseInstantVerify, responseInstant],
 
     allDelete: [allDelete],
     allGet: [allGet]
