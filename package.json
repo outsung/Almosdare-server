@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node intro.js & node server.js",
-    "test": "node intro.js & mocha -w 'test/**/*.js'"
+    "test": "node intro.js & mocha 'test/**/*.js'"
   },
   "author": "",
   "license": "ISC",

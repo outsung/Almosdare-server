@@ -31,7 +31,7 @@ function getUserByIdVerify(req, res, next){
     const id = req.params.id;
 
     if(!user_idx) return res.status(401).json("Available after login");
-    if(!id) return res.status(200).json({result: -1, message: "id : is_not_id"});
+    if(!id) return res.status(200).json({result: -1, message: "id : Field is empty"});
     
     next();
 }
@@ -54,7 +54,7 @@ function getUserByIdxVerify(req, res, next){
     const idx = req.params.idx;
 
     if(!user_idx) return res.status(401).json("Available after login");
-    if(!idx) return res.status(200).json({result: -1, message: "id : is_not_idx"});
+    if(!idx) return res.status(200).json({result: -1, message: "idx : Field is empty"});
     
     next();
 }
