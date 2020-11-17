@@ -5,7 +5,6 @@ const Crypto = require("crypto");
 const UserModel = require("../../models/User/user.model");
 const TimelineModel = require("../../models/Timeline/timeline.model");
 
-const UploadMiddleware = require("../S3/upload.middleware");
 
 // middleware
 function getUserByJwtVerify(req, res, next){
@@ -206,7 +205,7 @@ const User = {
     signup: [signupVerify, signup],
     login: [loginVerify, login],
 
-    patchProfileImage: [UploadMiddleware, patchProfileImageVerify, patchProfileImage],
+    patchProfileImage: [patchProfileImageVerify, patchProfileImage],
 
     allDelete: [allDelete],
     allGet: [allGet]
