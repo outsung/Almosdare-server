@@ -1,7 +1,7 @@
 // Require
 const Router = require('express').Router();
 const UserMiddleware = require('../../middlewares/User/user.middleware');
-const UploadMiddleware = require("../S3/upload.middleware");
+const UploadMiddleware = require("../../middlewares/S3/upload.middleware");
 
 // test
 Router.route('/test').delete(UserMiddleware.allDelete);
