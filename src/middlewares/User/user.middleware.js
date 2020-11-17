@@ -159,11 +159,10 @@ function patchProfileImageVerify(req, res, next){
     const user_idx = req.jwt_user_idx;
     const profileImage = req.body.profileImage;
     
-    console.log("patchProfileImageVerify");
-
     if(!user_idx) return res.status(401).json("Available after login");
     if(!profileImage) return res.status(200).json({result: -1, message: "profileImage : Field is empty"});
     
+    console.log("patchProfileImageVerify");
     next();
 };
 async function patchProfileImage(req, res, next){

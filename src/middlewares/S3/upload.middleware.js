@@ -26,7 +26,11 @@ const upload = Multer({
 }).single('profileImage');
 
 module.exports = (req, res, next) => {
+    console.log("upload!!!!!!!!!!!!!!!!!!!!!!!!");
+
     upload((req, res, err) => {
+        console.log("upload@@@@@@@@@@@@@2");
+
         if(err instanceof Multer.MulterError){
             // A Multer error occurred when uploading.
             console.log("multer error when uploading file:", err);
