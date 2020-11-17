@@ -14,7 +14,6 @@ const upload = Multer({
     storage: MulterS3({
         s3,
         bucket: 'almosdare',
-        contentType: MulterS3.AUTO_CONTENT_TYPE,
         acl: 'public-read',
         metadata(req, file, cb) {
             cb(null, {fieldName: file.fieldname});
