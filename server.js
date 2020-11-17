@@ -10,7 +10,7 @@ const port = process.env.PORT || 5000;
 app.use(express.json());
 
 // mogoDB connect
-mongoose.connect(process.env.ATLAS_URL, {useNewUrlParser: true, useCreateIndex : true, useUnifiedTopology:true});
+mongoose.connect(process.env.ATLAS_URL, {useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true, useFindAndModify: false});
 const connection = mongoose.connection;
 connection.once('open', () => {
     console.log("MongoDB database donnection establisehd successfully");

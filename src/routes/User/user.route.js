@@ -15,6 +15,7 @@ Router.route('/idx/:idx').get(UserMiddleware.getUserByIdx);
 Router.route('/login').post(UserMiddleware.login);
 Router.route('/signup').post(UserMiddleware.signup);
 
+Router.route('/profileImage').patch(UserMiddleware.patchProfileImage);
 
 
 

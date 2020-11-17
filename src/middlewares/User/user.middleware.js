@@ -1,9 +1,11 @@
 // require
 const Jwt = require("jsonwebtoken");
 const Crypto = require("crypto");
+
 const UserModel = require("../../models/User/user.model");
 const TimelineModel = require("../../models/Timeline/timeline.model");
 
+const UploadMiddleware = require("../S3/upload.middleware");
 
 // middleware
 function getUserByJwtVerify(req, res, next){
@@ -22,7 +24,8 @@ async function getUserByJwt(req, res, next){
         result: 1,
         idx: user._id,
         id: user.id,
-        nickname: user.nickname
+        nickname: user.nickname,
+        profileImageUrl: user.profileImageUrl
     });
 }
 
@@ -45,7 +48,8 @@ async function getUserById(req, res, next){
         result: 1,
         idx: user._id,
         id: user.id,
-        nickname: user.nickname
+        nickname: user.nickname,
+        profileImageUrl: user.profileImageUrl
     });
 }
 
@@ -68,7 +72,8 @@ async function getUserByIdx(req, res, next){
         result: 1,
         idx: user._id,
         id: user.id,
-        nickname: user.nickname
+        nickname: user.nickname,
+        profileImageUrl: user.profileImageUrl
     });
 }
 
@@ -142,11 +147,44 @@ async function login(req, res, next){
             idx: user._id,
             id: user.id,
             nickname: user.nickname,
+            profileImageUrl: user.profileImageUrl,
             accessToken: token,
             tokenType: "Bearer",
         });
     });
 }
+
+
+function patchProfileImageVerify(req, res, next){
+    const user_idx = req.jwt_user_idx;
+    const profileImage = req.body.profileImage;
+    
+    // console.log(req);
+
+    if(!user_idx) return res.status(401).json("Available after login");
+    if(!profileImage) return res.status(200).json({result: -1, message: "profileImage : Field is empty"});
+
+    next();
+};
+async function patchProfileImage(req, res, next){
+    const user_idx = req.jwt_user_idx;
+
+    if(!(req.file && req.file.location)) return res.status(500).json({result: -1, message: "server error!!"});
+    const url = req.file.location;
+
+    const user = await UserModel.Schema.findByIdAndUpdate(user_idx, {profileImageUrl : url}, {new: true});
+    
+    TimelineModel.Func.add(user._id, `[log] patchProfileImage : {id: ${user.id}, nickname: ${user.nickname}}, profileImageUrl: ${user.profileImageUrl}`);
+    console.log(`[log] patchProfileImage : {id: ${user.id}, nickname: ${user.nickname}}, profileImageUrl: ${user.profileImageUrl}`);
+
+    res.status(200).json({
+        result: 1,
+        idx: user._id,
+        id: user.id,
+        nickname: user.nickname,
+        profileImageUrl: user.profileImageUrl
+    });
+};
 
 
 //test
@@ -167,6 +205,8 @@ const User = {
     getUserByIdx: [getUserByIdxVerify, getUserByIdx],
     signup: [signupVerify, signup],
     login: [loginVerify, login],
+
+    patchProfileImage: [patchProfileImageVerify, UploadMiddleware.single('profileImage'), patchProfileImage],
 
     allDelete: [allDelete],
     allGet: [allGet]

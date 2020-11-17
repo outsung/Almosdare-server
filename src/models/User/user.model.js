@@ -18,11 +18,16 @@ const userSchema = new Schema({
     },
     salt: {
         type: String,
-        required: true
+        required: true,
     },
     nickname: {
         type: String,
+        required: true,
         minlength: 2,
+        trim: true,
+    },
+    profileImageUrl: {
+        type: String,
         trim: true,
     }
 },
