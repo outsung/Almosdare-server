@@ -34,7 +34,8 @@ async function getAppointment(req, res, next){
                     users[idx] = {
                         idx: user._id,
                         id: user.id,
-                        nickname: user.nickname
+                        nickname: user.nickname,
+                        profileImageUrl: user.profileImageUrl
                     };
                 }
                 appointment[t][i].invited[j] = users[idx];
@@ -46,7 +47,8 @@ async function getAppointment(req, res, next){
                     users[idx] = {
                         idx: user._id,
                         id: user.id,
-                        nickname: user.nickname
+                        nickname: user.nickname,
+                        profileImageUrl: user.profileImageUrl
                     };
                 }
                 appointment[t][i].pending[j] = users[idx];
