@@ -156,10 +156,10 @@ async function login(req, res, next){
 
 function patchProfileImageVerify(req, res, next){
     const user_idx = req.jwt_user_idx;
-    const profileImage = req.body.profileImage;
+    const file = req.file;
     
     if(!user_idx) return res.status(401).json("Available after login");
-    if(!profileImage) return res.status(200).json({result: -1, message: "profileImage : Field is empty"});
+    if(!(file && file.location)) return res.status(500).json({result: -1, message: "server error!!"});
     
     console.log("patchProfileImageVerify");
     next();
@@ -167,8 +167,6 @@ function patchProfileImageVerify(req, res, next){
 async function patchProfileImage(req, res, next){
     console.log("patchProfileImage");
     const user_idx = req.jwt_user_idx;
-
-    if(!(req.file && req.file.location)) return res.status(500).json({result: -1, message: "server error!!"});
     const url = req.file.location;
 
     const user = await UserModel.Schema.findByIdAndUpdate(user_idx, {profileImageUrl : url}, {new: true});
