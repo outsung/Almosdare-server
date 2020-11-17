@@ -159,14 +159,15 @@ function patchProfileImageVerify(req, res, next){
     const user_idx = req.jwt_user_idx;
     const profileImage = req.body.profileImage;
     
-    // console.log(req);
+    console.log("patchProfileImageVerify");
 
     if(!user_idx) return res.status(401).json("Available after login");
     if(!profileImage) return res.status(200).json({result: -1, message: "profileImage : Field is empty"});
-
+    
     next();
 };
 async function patchProfileImage(req, res, next){
+    console.log("patchProfileImage");
     const user_idx = req.jwt_user_idx;
 
     if(!(req.file && req.file.location)) return res.status(500).json({result: -1, message: "server error!!"});
@@ -177,7 +178,7 @@ async function patchProfileImage(req, res, next){
     TimelineModel.Func.add(user._id, `[log] patchProfileImage : {id: ${user.id}, nickname: ${user.nickname}}, profileImageUrl: ${user.profileImageUrl}`);
     console.log(`[log] patchProfileImage : {id: ${user.id}, nickname: ${user.nickname}}, profileImageUrl: ${user.profileImageUrl}`);
 
-    res.status(200).json({
+    return res.status(200).json({
         result: 1,
         idx: user._id,
         id: user.id,
