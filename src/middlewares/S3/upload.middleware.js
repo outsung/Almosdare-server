@@ -42,6 +42,7 @@ module.exports = (req, res, next) => {
         }
 
         console.log(`File is uploaded to the memoryStorage: ${req.file.originalname}`);
-        next();
     });
+
+    next();
 };
