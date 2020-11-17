@@ -161,11 +161,9 @@ function patchProfileImageVerify(req, res, next){
     if(!user_idx) return res.status(401).json("Available after login");
     if(!(file && file.location)) return res.status(500).json({result: -1, message: "server error!!"});
     
-    console.log("patchProfileImageVerify");
     next();
 };
 async function patchProfileImage(req, res, next){
-    console.log("patchProfileImage");
     const user_idx = req.jwt_user_idx;
     const url = req.file.location;
 
