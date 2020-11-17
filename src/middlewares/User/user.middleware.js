@@ -207,7 +207,7 @@ const User = {
     signup: [signupVerify, signup],
     login: [loginVerify, login],
 
-    patchProfileImage: [patchProfileImageVerify, UploadMiddleware.single('profileImage'), patchProfileImage],
+    patchProfileImage: [patchProfileImageVerify, UploadMiddleware, patchProfileImage],
 
     allDelete: [allDelete],
     allGet: [allGet]

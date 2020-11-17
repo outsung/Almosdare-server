@@ -23,6 +23,21 @@ const upload = Multer({
         }
     }),
     limits: { fileSize: 5 * 1024 * 1024 },
-});
+}).single('profileImage');
 
-module.exports = upload;
+module.exports = (req, res, next) => {
+    upload((req, res, err) => {
+        if(err instanceof Multer.MulterError){
+            // A Multer error occurred when uploading.
+            console.log("multer error when uploading file:", err);
+            return res.sendStatus(500);
+        }else if(err){
+            // An unknown error occurred when uploading.
+            console.log("unknown error when uploading file:", err);
+            return res.sendStatus(500);
+        }
+
+        console.log(`File is uploaded to the memoryStorage: ${req.file.originalname}`);
+        next();
+    });
+};
