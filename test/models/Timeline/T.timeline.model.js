@@ -8,7 +8,7 @@ describe('======== TimelineModel 테스트 ========', function(){
     
     describe('TimelineModel 스키마 유요성 테스트', function(){
         
-        it('TimelineModel 스키마 필수 요소는 정해져 있다', function(done){
+        it('스키마 필수 요소는 정해져 있다', function(done){
             const t = new TimelineModel.Schema();
         
             t.validate(function(err){

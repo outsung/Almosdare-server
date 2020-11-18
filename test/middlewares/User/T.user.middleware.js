@@ -16,11 +16,8 @@ describe('======== UserMiddleware 테스트 ========', function(){
         };
         const responseForm = {
             result: "",
-
         };
-        context('Verify', function(){
-            Base.middlewareVerifyTest(UserMiddleware.getUserByJwt[0], requestForm);
-        });
+
         it('Action', function(){
 
             // Base.middlewareActionTest(UserMiddleware.getUserByJwt[1], );
@@ -50,7 +47,11 @@ describe('======== UserMiddleware 테스트 ========', function(){
             */
             UserMiddleware.getUserByJwt[1]()
         });
+
+        context('Verify', () => Base.middlewareVerifyTest(UserMiddleware.getUserByJwt[0], requestForm));
+
     });
+
     describe('getUserById 테스트', function(){
         const requestForm = {
             jwt_user_idx : "token",
@@ -59,11 +60,14 @@ describe('======== UserMiddleware 테스트 ========', function(){
                 id: "test_id"
             }
         };
+        
+        it('Action');
+
         context('Verify', function(){
             Base.middlewareVerifyTest(UserMiddleware.getUserById[0], requestForm);
         });
-        it('Action');
     });
+
     describe('getUserByIdx 테스트', function(){
         const requestForm = {
             jwt_user_idx : "token",
@@ -77,6 +81,5 @@ describe('======== UserMiddleware 테스트 ========', function(){
         });
         it('Action');
     });
-
 
 });

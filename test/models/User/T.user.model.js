@@ -5,7 +5,7 @@ const Chai = require('chai');
 describe('======== UserModel 테스트 ========', function(){
     
     describe('UserModel 스키마 유요성 테스트', function(done){
-        it('UserModel 스키마 필수 요소는 정해져 있다', function(done){
+        it('스키마 필수 요소는 정해져 있다', function(done){
             const u = new UserModel.Schema();
             
             u.validate(function(err){

@@ -1,127 +1,90 @@
 // Require
+const AuthMiddleware = require('../../src/middlewares/auth.middleware');
 const Chai = require('chai');
 const Sinon = require('sinon');
 const Jwt = require("jsonwebtoken");
-const AuthMiddleware = require('../../src/middlewares/auth.middleware');
 
 
 describe('======== AuthMiddleware 테스트 ========', function(){
     
-    /*
-        auth 미들웨어 기능
+    let spyNext;
+    let spyResponse;
+    let stubJwtVerify;
 
-        req.header.authorization => 
-
-        
-    */
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    describe('jsonwebtoken 모듈 테스트', function(){
-        skip('jwt 토큰 생성 과 확인이 일치 해야함', function(done){
-            // let stub;
-            // before(function(){
-            //     stub = Sinon.stub(Jwt, 'verify').callsFake(() => {
-            //         return Promise.resolve({success: 'Token is valid'});
-            //     });
-            // }) 
-            Chai.expect(1).to.exist;
-            done();
-        });
+    beforeEach(() => {
+        spyNext = Sinon.spy();
+        spyResponse = { status: Sinon.spy(), json: Sinon.spy() };
     });
-    
-    describe('req.header.authorization의 값이 이상할 때 jwt_user_idx를 null로 처리 해야함', function(){
-        // let req;
-        // let res;
-
-        // let nextSpy;
-        // beforeEach(function(){
-        //     req = { authorization: "Bearer token" };
-        //     res = { };
-        //     Sinon.stub(Jwt, "verify").callsFake(function(){
-        //         return {idx: "123"};
-        //     });
-        // });
-        // afterEach(function(){
-        //     Sinon.restore();
-        // });
-        
-        // it('', function(done){
-        //     AuthMiddleware[0](req, res, nextSpy);
-        //     res.jwt_user_idx === "123"; 
-        //     it('next는 무조건 한번 실행 해야함', function(){ Chai.expect(nextSpy.calledOnce).to.be.true; });
-        // });
-        // it('', function(done){
-        //     AuthMiddleware[0](req, res, nextSpy);
-        //     res.jwt_user_idx === "123"; 
-        //     it('next는 무조건 한번 실행 해야함', function(){ Chai.expect(nextSpy.calledOnce).to.be.true; });
-        // });
-        // it('', function(done){
-        //     AuthMiddleware[0](req, res, nextSpy);
-        //     res.jwt_user_idx === "123"; 
-        //     it('next는 무조건 한번 실행 해야함', function(){ Chai.expect(nextSpy.calledOnce).to.be.true; });
-        // });
+    afterEach(() => {
+        stubJwtVerify.restore();
     });
 
-    describe('req.header.authorization의 값을 jwt_user_idx에 확인 후 대입 해야함', function(){
-        // let req;
-        // let res;
-        // let nextSpy;
-        // before(function(){
-        //     nextSpy = Sinon.spy();
-        //     req = { authorization: "Bearer token" };
-        //     res = { };
-        //     Sinon.stub(Jwt, "verify").callsFake(function(){
-        //         return {idx: "123"};
-        //     });
-        // })
+    it('req.headers.authorization 유효하면 res.jwt_user_idx 줘야한다', function(){
+        stubJwtVerify = Sinon.stub(Jwt, "verify").yields(null, { idx: "some idx" });
+        let requestForm = {
+            headers: {
+                authorization: "Bearer someToken"
+            },
+            jwt_user_idx: "init value"
+        };
         
-        // it('', function(done){
-        //     AuthMiddleware[0](req, res, nextSpy);
-        //     res.jwt_user_idx === "123"; 
-        // })
-        // it('next는 무조건 한번 실행 해야함', function(){ Chai.expect(nextSpy.calledOnce).to.be.true; });
+        AuthMiddleware[0](requestForm, spyResponse, spyNext);
+
+        Sinon.assert.calledOnce(spyNext);
+        Sinon.assert.notCalled(spyResponse.status);
+        Sinon.assert.notCalled(spyResponse.json);
+        Chai.expect(requestForm.jwt_user_idx).to.equal("some idx");
     });
 
-    // describe('', function(){
+    it('req.headers.authorization 없으면 res.jwt_user_idx를 null로 줘야한다', function(){
+        stubJwtVerify = Sinon.stub(Jwt, "verify").yields(null, { idx: "some idx" });
+        let requestForm = {
+            headers: {
+                authorization: ""
+            },
+            jwt_user_idx: "init value"
+        };
         
-    //     let req;
-    //     let res;
-    //     let nextSpy;
-    //     before(function(){
-    //         nextSpy = Sinon.spy();
-    //         req = { authorization: "Bearer token" };
-    //         res = { };
-    //         Sinon.stub(Jwt, "verify").callsFake(function(){
-    //             return {idx: "123"};
-    //         });
-    //     })
-    //     it('next는 무조건 한번 실행 해야함', function(){ Chai.expect(nextSpy.calledOnce).to.be.true; });
-    // })
+        AuthMiddleware[0](requestForm, spyResponse, spyNext);
+        
+        Sinon.assert.calledOnce(spyNext);
+        Sinon.assert.notCalled(spyResponse.status);
+        Sinon.assert.notCalled(spyResponse.json);
+        Chai.expect(requestForm.jwt_user_idx).to.null;
+    });
+
+    it('req.headers.authorization "Bearer "이 없으면 res.jwt_user_idx를 null로 줘야한다', function(){
+        stubJwtVerify = Sinon.stub(Jwt, "verify").yields(null, { idx: "some idx" });
+        let requestForm = {
+            headers: {
+                authorization: "someToken"
+            },
+            jwt_user_idx: "init value"
+        };
+        
+        AuthMiddleware[0](requestForm, spyResponse, spyNext);
+
+        Sinon.assert.calledOnce(spyNext);
+        Sinon.assert.notCalled(spyResponse.status);
+        Sinon.assert.notCalled(spyResponse.json);
+        Chai.expect(requestForm.jwt_user_idx).to.null;
+    });
+
+    it('Jwt.verify에서 error가 존재하면 res.jwt_user_idx를 null로 줘야한다', function(){
+        stubJwtVerify = Sinon.stub(Jwt, "verify").yields("some err", { idx: "some idx" });
+        let requestForm = {
+            headers: {
+                authorization: "Bearer someToken"
+            },
+            jwt_user_idx: "init value"
+        };
+        
+        AuthMiddleware[0](requestForm, spyResponse, spyNext);
+
+        Sinon.assert.calledOnce(spyNext);
+        Sinon.assert.notCalled(spyResponse.status);
+        Sinon.assert.notCalled(spyResponse.json);
+        Chai.expect(requestForm.jwt_user_idx).to.null;
+    });
+
 });
-
-// test.after('cleanup', t => {
-//     stub.restore();
-// })
-
-// var expect = require('chai').expect;
-// var Meme = require('../src/Meme');
-
-// describe('meme', function() {
-//     it('should be invalid if name is empty', function(done) {
-//         var m = new Meme();
-
-//         m.validate(function(err) {
-//             expect(err.errors.name).to.exist;
-//             done();
-//         });
-//     });
-// });

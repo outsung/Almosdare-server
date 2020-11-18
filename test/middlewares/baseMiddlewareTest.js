@@ -5,7 +5,7 @@ const Chai = require('chai');
 
 // middleware에 badRequest(필드 누락)이 들어왔을 때 validResponse과 같은지 확인하는 함수
 function ifFieldDoseNotExist(middleware, badRequest, validResponse){
-    const nextSpy = Sinon.spy();
+    const spyNext = Sinon.spy();
     const stubResponse = {
         status: function(status){
             this.status = status;
@@ -17,10 +17,10 @@ function ifFieldDoseNotExist(middleware, badRequest, validResponse){
         }
     };
 
-    middleware(badRequest, stubResponse, nextSpy);
+    middleware(badRequest, stubResponse, spyNext);
     
     it('필드가 누락되었을 때 next()는 한번도 호출돼선 안된다', function(){
-        Chai.expect(nextSpy.notCalled).to.be.true;
+        Chai.expect(spyNext.notCalled).to.be.true;
     });
 
     it('필드가 누락되었을 때 필드에 따른 Response을 줘야한다', function(){
@@ -33,10 +33,10 @@ function ifFieldDoseNotExist(middleware, badRequest, validResponse){
 function middlewareVerifyTest(middleware, requestForm){
     
     it('유효한 요청이 들어왔을때 next()는 한번만 호출해야한다', function(){
-        const nextSpy = Sinon.spy();
+        const spyNext = Sinon.spy();
 
-        middleware(requestForm, {}, nextSpy);
-        Chai.expect(nextSpy.calledOnce).to.be.true;
+        middleware(requestForm, {}, spyNext);
+        Chai.expect(spyNext.calledOnce).to.be.true;
     })
     
     // req.jwt_user_idx
@@ -88,10 +88,10 @@ function middlewareVerifyTest(middleware, requestForm){
 function middlewareActionTest(middleware, requestForm){
     
     it('유효한 요청이 들어왔을때 next()는 한번만 호출해야한다', function(){
-        const nextSpy = Sinon.spy();
+        const spyNext = Sinon.spy();
 
-        middleware(requestForm, {}, nextSpy);
-        Chai.expect(nextSpy.calledOnce).to.be.true;
+        middleware(requestForm, {}, spyNext);
+        Chai.expect(spyNext.calledOnce).to.be.true;
     })
     
     // req.jwt_user_idx

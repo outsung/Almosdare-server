@@ -7,7 +7,7 @@ const Sinon = require('sinon');
 describe('======== InstantModel 테스트 ========', function(){
 
     describe('InstantModel 스키마 유요성 테스트', function(){
-        it('InstantModel 스키마 필수 요소는 정해져 있다', function(done){
+        it('스키마 필수 요소는 정해져 있다', function(done){
             const i = new InstantModel.Schema();
             
             i.validate(function(err){
@@ -17,7 +17,7 @@ describe('======== InstantModel 테스트 ========', function(){
                 done();
             });
         });
-        it('InstantModel invited.length가 1보다 작다면 실패해야한다', function(done){
+        it('invited.length가 1보다 작다면 실패해야한다', function(done){
             const i = new InstantModel.Schema({invited: []});
             
             i.validate(function(err){
@@ -25,7 +25,7 @@ describe('======== InstantModel 테스트 ========', function(){
                 done();
             });
         });
-        it('InstantModel invited.length가 1보다 크다면 성공해야한다', function(done){
+        it('invited.length가 1보다 크다면 성공해야한다', function(done){
             const i = new InstantModel.Schema({invited: [Mongoose.Types.ObjectId()]});
             
             i.validate(function(err){
@@ -41,7 +41,7 @@ describe('======== InstantModel 테스트 ========', function(){
             
             afterEach(() => Sinon.verifyAndRestore());
 
-            it('getInstantByUser 사용되는 쿼리는 정해져 있다', function(){
+            it('사용되는 쿼리는 정해져 있다', function(){
                 Sinon.stub(InstantModel.Schema, 'find');
                 const expectedIdx = Mongoose.Types.ObjectId();
                 
@@ -50,7 +50,7 @@ describe('======== InstantModel 테스트 ========', function(){
                 Sinon.assert.calledWith(InstantModel.Schema.find, {invited: {$in : expectedIdx}});
             });
 
-            it('getInstantByUser 반환값은 정해져 있다', async function(){
+            it('반환값은 정해져 있다', async function(){
                 const expectedInstant = [{
                     pending: [Mongoose.Types.ObjectId()],
                     invited: [Mongoose.Types.ObjectId()],
@@ -73,7 +73,7 @@ describe('======== InstantModel 테스트 ========', function(){
             
             afterEach(() => Sinon.verifyAndRestore());
             
-            it('getPendingInstantByUser에 사용되는 쿼리는 정해져 있다', function(){
+            it('사용되는 쿼리는 정해져 있다', function(){
                 Sinon.stub(InstantModel.Schema, 'find');
                 const expectedIdx = Mongoose.Types.ObjectId();
                 
@@ -82,7 +82,7 @@ describe('======== InstantModel 테스트 ========', function(){
                 Sinon.assert.calledWith(InstantModel.Schema.find, {pending: {$in : expectedIdx}});
             });
 
-            it('getPendingInstantByUser 반환값은 정해져 있다', async function(){
+            it('반환값은 정해져 있다', async function(){
                 const expectedInstant = [{
                     pending: [Mongoose.Types.ObjectId()],
                     invited: [Mongoose.Types.ObjectId()],

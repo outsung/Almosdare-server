@@ -7,7 +7,7 @@ const Sinon = require('sinon');
 describe('======== DareModel 테스트 ========', function(){
 
     describe('DareModel 스키마 유요성 테스트', function(){
-        it('DareModel 스키마 필수 요소는 정해져 있다', function(done){
+        it('스키마 필수 요소는 정해져 있다', function(done){
             const d = new DareModel.Schema();
             
             d.validate(function(err){
@@ -29,7 +29,7 @@ describe('======== DareModel 테스트 ========', function(){
             
             afterEach(() => Sinon.verifyAndRestore());
 
-            it('getDareByUser 사용되는 쿼리는 정해져 있다', function(){
+            it('사용되는 쿼리는 정해져 있다', function(){
                 Sinon.stub(DareModel.Schema, 'find');
                 const expectedIdx = Mongoose.Types.ObjectId();
                 
@@ -38,7 +38,7 @@ describe('======== DareModel 테스트 ========', function(){
                 Sinon.assert.calledWith(DareModel.Schema.find, {$or: [{creator: expectedIdx}, {invited: {$in : expectedIdx}}]});
             });
 
-            it('getDareByUser 반환값은 정해져 있다', async function(){
+            it('반환값은 정해져 있다', async function(){
                 const expectedDare = [{
                     _id: "idx",
                     creator: Mongoose.Types.ObjectId(),
@@ -67,7 +67,7 @@ describe('======== DareModel 테스트 ========', function(){
             
             afterEach(() => Sinon.verifyAndRestore());
             
-            it('getPendingDareByUser에 사용되는 쿼리는 정해져 있다', function(){
+            it('사용되는 쿼리는 정해져 있다', function(){
                 Sinon.stub(DareModel.Schema, 'find');
                 const expectedIdx = Mongoose.Types.ObjectId();
                 
@@ -76,7 +76,7 @@ describe('======== DareModel 테스트 ========', function(){
                 Sinon.assert.calledWith(DareModel.Schema.find, {pending: {$in : expectedIdx}});
             });
 
-            it('getPendingDareByUser 반환값은 정해져 있다', async function(){
+            it('반환값은 정해져 있다', async function(){
                 const expectedDare = [{
                     _id: "idx",
                     creator: Mongoose.Types.ObjectId(),
