@@ -6,37 +6,25 @@ const UserMiddleware = require("../../../src/middlewares/User/user.middleware");
 // const Crypto = require("crypto");
 // const TimelineModel = require("../../models/Timeline/timeline.model");
 
-describe('UserMiddleware 테스트', function(){
+describe('======== UserMiddleware 테스트 ========', function(){
 
-    // dev
-    describe('dev middlewares 테스트', function(){
-    
-        describe('allDelete 테스트', function(){
-            it('Action');
-        });
-        describe('allGet 테스트', function(){
-            it('Action');
-        });
-    });
-
-
-    // function
     describe('getUserByJwt 테스트', function(){
         const requestForm = {
-            jwt_user_idx : "token",
+            jwt_user_idx: "token",
             body: {},
             params: {}
         };
-        // const responseForm = {
+        const responseForm = {
+            result: "",
 
-
-        // };
+        };
         context('Verify', function(){
             Base.middlewareVerifyTest(UserMiddleware.getUserByJwt[0], requestForm);
         });
         it('Action', function(){
 
-            Base.middlewareActionTest(UserMiddleware.getUserByJwt[1], );
+            // Base.middlewareActionTest(UserMiddleware.getUserByJwt[1], );
+            
             /*
                 res에 result가 있는가?;
 
@@ -89,5 +77,6 @@ describe('UserMiddleware 테스트', function(){
         });
         it('Action');
     });
+
 
 });

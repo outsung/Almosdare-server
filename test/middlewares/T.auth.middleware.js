@@ -5,9 +5,28 @@ const Jwt = require("jsonwebtoken");
 const AuthMiddleware = require('../../src/middlewares/auth.middleware');
 
 
-describe('AuthMiddleware 테스트', function(){
+describe('======== AuthMiddleware 테스트 ========', function(){
+    
+    /*
+        auth 미들웨어 기능
+
+        req.header.authorization => 
+
+        
+    */
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     describe('jsonwebtoken 모듈 테스트', function(){
-        it('jwt 토큰 생성 과 확인이 일치 해야함', function(done){
+        skip('jwt 토큰 생성 과 확인이 일치 해야함', function(done){
             // let stub;
             // before(function(){
             //     stub = Sinon.stub(Jwt, 'verify').callsFake(() => {

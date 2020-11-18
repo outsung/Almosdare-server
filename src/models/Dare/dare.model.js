@@ -6,9 +6,10 @@ const Schema = Mongoose.Schema;
 const dareSchema = new Schema({
     creator: {
         type: Schema.Types.ObjectId,
+        ref: "User",
         required: true,
-        ref: "User"
     },
+    
     place: {
         type: String,
         required: true
@@ -17,6 +18,7 @@ const dareSchema = new Schema({
         type: Date,
         required: true
     },
+
     pending: [{
         type: Schema.Types.ObjectId,
         ref: "User"
@@ -33,18 +35,33 @@ const dareSchema = new Schema({
 
 // Func
 async function getDareByUser(user_idx){
-
     const find_res = await Dare.Schema.find({$or: [{creator: user_idx}, {invited: {$in : user_idx}}]});
-    // res.status(200).json(find_res);
-    return find_res;
+
+    return find_res.map(d => {
+        return {
+            idx: d._id,
+            creator: d.creator,
+            place: d.place,
+            date: d.date,
+            invited: d.invited,
+            pending: d.pending
+        }
+    });
 }
 async function getPendingDareByUser(user_idx){
-
     const find_res = await Dare.Schema.find({pending: {$in : user_idx}});
-    // res.status(200).json(find_res);
-    return find_res;
-}
 
+    return find_res.map(d => {
+        return {
+            idx: d._id,
+            creator: d.creator,
+            place: d.place,
+            date: d.date,
+            invited: d.invited,
+            pending: d.pending
+        }
+    });
+}
 
 
 // exports

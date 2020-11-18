@@ -4,14 +4,20 @@ const Mongoose = require('mongoose');
 // Schema
 const Schema = Mongoose.Schema;
 const instantSchema = new Schema({
-    pending: [{
-        type: Schema.Types.ObjectId,
-        ref: "User"
-    }],
-    invited: [{
-        type: Schema.Types.ObjectId,
-        ref: "User"
-    }]
+    pending: {
+        type: [{
+            type: Schema.Types.ObjectId,
+            ref: "User"
+        }]
+    },
+    invited: {
+        type: [{
+            type: Schema.Types.ObjectId,
+            ref: "User",
+        }],
+        validate: v => v.length >= 1,
+    }
+
 },
 {
     timestamps: true,
@@ -20,16 +26,26 @@ const instantSchema = new Schema({
 
 // Func
 async function getInstantByUser(user_idx){
-
     const find_res = await Instant.Schema.find({invited: {$in : user_idx}});
-    // res.status(200).json({result: 1, data: find_res});
-    return find_res;
+
+    return find_res.map(i => {
+        return {
+            idx: i._id,
+            invited: i.invited,
+            pending: i.pending
+        }
+    });
 }
 async function getPendingInstantByUser(user_idx){
-
     const find_res = await Instant.Schema.find({pending: {$in : user_idx}});
-    // res.status(200).json({result: 1, data: find_res});
-    return find_res;
+    
+    return find_res.map(i => {
+        return {
+            idx: i._id,
+            invited: i.invited,
+            pending: i.pending
+        }
+    });
 }
 
 

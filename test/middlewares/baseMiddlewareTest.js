@@ -140,9 +140,7 @@ function middlewareActionTest(middleware, requestForm){
 }
 
 module.exports = {
-    fectory: {
-
-    }, 
     ifFieldDoseNotExist: ifFieldDoseNotExist,
-    middlewareVerifyTest: middlewareVerifyTest
+    middlewareVerifyTest: middlewareVerifyTest,
+    middlewareActionTest : middlewareActionTest,
 };
