@@ -1,6 +1,7 @@
 // require
 const Mongoose = require('mongoose');
 const InstantModel = require('../../models/Instant/instant.model');
+const UserModel = require('../../models/User/user.model');
 const TimelineModel = require('../../models/Timeline/timeline.model');
 
 
@@ -57,6 +58,25 @@ async function invitingUser(req, res, next){
     TimelineModel.Func.add(user_idx, `[log] instant_inviting_user : {_id: ${idx}, users: ${users.join(" ")}}`);
     console.log(`[log] instant_inviting_user : {_id: ${idx}, users: ${users.join(" ")}}`);          
     
+    for(let i = 0; i < instant.invited.length; i++){
+        const user = await UserModel.Schema.findById(instant.invited[i]);
+        instant.invited[i] = {
+            idx: user._id,
+            id: user.id,
+            nickname: user.nickname,
+            profileImageUrl: user.profileImageUrl
+        }
+    }
+    for(let i = 0; i < instant.pending.length; i++){
+        const user = await UserModel.Schema.findById(instant.pending[i]);
+        instant.pending[i] = {
+            idx: user._id,
+            id: user.id,
+            nickname: user.nickname,
+            profileImageUrl: user.profileImageUrl
+        }
+    }
+
     res.status(200).json({
         result: 1,
         data: {
