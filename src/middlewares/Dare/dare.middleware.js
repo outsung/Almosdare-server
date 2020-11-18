@@ -28,7 +28,7 @@ async function create(req, res, next){
     });
 
     const dare = await newDare.save();
-    TimelineModel.Func.add(user_idx, `[log] dare_create : {creator: ${creator}, place: ${place}, date: ${date}, _id: ${dare._id}}`);
+    TimelineModel.Func.add(creator, `[log] dare_create : {creator: ${creator}, place: ${place}, date: ${date}, _id: ${dare._id}}`);
     console.log(`[log] dare_create : {creator: ${creator}, place: ${place}, date: ${date}}`);          
     res.status(200).json({result: 1, idx: dare._id});
 }
