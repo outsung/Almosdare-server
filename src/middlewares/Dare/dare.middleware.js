@@ -11,6 +11,7 @@ function createVerify(req, res, next){
     const date = req.body.date;
 
     if(!creator) return res.status(401).json("Available after login");
+    console.log(place);
     if(!place) return res.status(200).json({result: -1, message: "place : is_false"});
     if(!date) return res.status(200).json({result: -1, message: "date : is_false"});
 
