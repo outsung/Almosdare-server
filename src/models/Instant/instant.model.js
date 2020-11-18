@@ -26,7 +26,7 @@ const instantSchema = new Schema({
 
 // Func
 async function getInstantByUser(user_idx){
-    const find_res = await Instant.Schema.find({invited: {$in : user_idx}});
+    const find_res = await Instant.Schema.find({invited: {$in : user_idx}}).sort({updatedAt: -1});
 
     return find_res.map(i => {
         return {
@@ -37,7 +37,8 @@ async function getInstantByUser(user_idx){
     });
 }
 async function getPendingInstantByUser(user_idx){
-    const find_res = await Instant.Schema.find({pending: {$in : user_idx}});
+    
+    const find_res = await Instant.Schema.find({pending: {$in : user_idx}}).sort({updatedAt: -1});
     
     return find_res.map(i => {
         return {

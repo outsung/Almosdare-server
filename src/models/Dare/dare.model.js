@@ -35,7 +35,7 @@ const dareSchema = new Schema({
 
 // Func
 async function getDareByUser(user_idx){
-    const find_res = await Dare.Schema.find({$or: [{creator: user_idx}, {invited: {$in : user_idx}}]});
+    const find_res = await Dare.Schema.find({$or: [{creator: user_idx}, {invited: {$in : user_idx}}]}).sort({updatedAt: -1});
 
     return find_res.map(d => {
         return {
@@ -49,7 +49,7 @@ async function getDareByUser(user_idx){
     });
 }
 async function getPendingDareByUser(user_idx){
-    const find_res = await Dare.Schema.find({pending: {$in : user_idx}});
+    const find_res = await Dare.Schema.find({pending: {$in : user_idx}}).sort({updatedAt: -1});
 
     return find_res.map(d => {
         return {
