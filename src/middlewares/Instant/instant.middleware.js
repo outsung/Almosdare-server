@@ -52,10 +52,19 @@ async function invitingUser(req, res, next){
     const idx = req.params.idx;
     const users = req.body.users.map(u => u.idx);
     
-    await InstantModel.Schema.updateOne({_id: idx}, {$push: {pending: {$each: users}}});
+    const instant = await InstantModel.Schema.findByIdAndUpdate(idx, {$push: {pending: {$each: users}}}, {new: true});
+    
     TimelineModel.Func.add(user_idx, `[log] instant_inviting_user : {_id: ${idx}, users: ${users.join(" ")}}`);
     console.log(`[log] instant_inviting_user : {_id: ${idx}, users: ${users.join(" ")}}`);          
-    res.status(200).json({result: 1, message: "inviting_user"});
+    
+    res.status(200).json({
+        result: 1,
+        data: {
+            idx: instant._id,
+            invited: instant.invited,
+            pending: instant.pending
+        }
+    });
 }
 
 // 수정예정
