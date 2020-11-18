@@ -101,10 +101,10 @@ async function getAppointment(req, res, next){
 
 
     return res.status(200).json({result: 1, data: {
-        invitedDare: appointment[0],
-        pendingDare: appointment[1],
-        invitedInstant: appointment[2],
-        pendingInstant: appointment[3]
+        invitedInstant: appointment[0],
+        pendingInstant: appointment[1],
+        invitedDare: appointment[2],
+        pendingDare: appointment[3]
     }});
 }
 
