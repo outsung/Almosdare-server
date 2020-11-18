@@ -11,7 +11,6 @@ function createVerify(req, res, next){
     const date = req.body.date;
 
     if(!creator) return res.status(401).json("Available after login");
-    console.log(place);
     if(!place) return res.status(200).json({result: -1, message: "place : is_false"});
     if(!date) return res.status(200).json({result: -1, message: "date : is_false"});
 
@@ -31,6 +30,7 @@ async function create(req, res, next){
     const dare = await newDare.save();
     TimelineModel.Func.add(creator, `[log] dare_create : {creator: ${creator}, place: ${place}, date: ${date}, _id: ${dare._id}}`);
     console.log(`[log] dare_create : {creator: ${creator}, place: ${place}, date: ${date}}`);          
+    
     res.status(200).json({result: 1, idx: dare._id});
 }
 
@@ -50,7 +50,7 @@ async function invitingUserVerify(req, res, next){
     const dare = await DareModel.Schema.findById(idx);
     if(!dare) return res.status(200).json({result: -1, message: "idx : dare_is_not_exist"});
 
-    if(!(dare.invited.includes(user_idx) || dare.creator.includes(user_idx))) return res.status(401).json("No Permission");
+    if(!(dare.invited.includes(user_idx) || dare.creator === user_idx)) return res.status(401).json("No Permission");
     if(users.filter(u => dare.pending.includes(u.idx) || dare.invited.includes(u.idx) || dare.creator === u.idx).length)
         return res.status(200).json({result: -1, message: "already_invited"});
 
