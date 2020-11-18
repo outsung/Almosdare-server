@@ -1,6 +1,7 @@
 // require
 const Mongoose = require('mongoose');
 const DareModel = require('../../models/Dare/dare.model');
+const UserModel = require('../../models/User/user.model');
 const TimelineModel = require('../../models/Timeline/timeline.model');
 
 
@@ -50,8 +51,7 @@ async function invitingUserVerify(req, res, next){
     const dare = await DareModel.Schema.findById(idx);
     if(!dare) return res.status(200).json({result: -1, message: "idx : dare_is_not_exist"});
 
-    
-    if((!dare.invited.includes(user_idx)) && (dare.creator !== user_idx)) return res.status(401).json("No Permission");
+    if(!(dare.invited.includes(user_idx) || String(dare.creator) === user_idx)) return res.status(401).json("No Permission");
     if(users.filter(u => dare.pending.includes(u.idx) || dare.invited.includes(u.idx) || dare.creator === u.idx).length)
         return res.status(200).json({result: -1, message: "already_invited"});
 
@@ -63,22 +63,29 @@ async function invitingUser(req, res, next){
     const users = req.body.users.map(u => u.idx);
     
     const dare = await DareModel.Schema.findByIdAndUpdate(idx, {$push: {pending: {$each: users}}}, {new: true});
-
+    
     TimelineModel.Func.add(user_idx, `[log] dare_inviting_user : {_id: ${idx}, users: ${users.join(" ")}}`);
     console.log(`[log] dare_inviting_user : {_id: ${idx}, users: ${users.join(" ")}}`);          
 
-    {
-        const user = await UserModel.Schema.findById(dare.creator);
-        dare.creator = {
+    const user = await UserModel.Schema.findById(dare.creator);
+    
+    const newDare = {
+        idx: dare._id,
+        creator: {
             idx: user._id,
             id: user.id,
             nickname: user.nickname,
             profileImageUrl: user.profileImageUrl
-        }
+        },
+        date: dare.date,
+        place: dare.place,
+        invited: [],
+        pending: []
     }
+    
     for(let i = 0; i < dare.invited.length; i++){
         const user = await UserModel.Schema.findById(dare.invited[i]);
-        dare.invited[i] = {
+        newDare.invited[i] = {
             idx: user._id,
             id: user.id,
             nickname: user.nickname,
@@ -87,7 +94,7 @@ async function invitingUser(req, res, next){
     }
     for(let i = 0; i < dare.pending.length; i++){
         const user = await UserModel.Schema.findById(dare.pending[i]);
-        dare.pending[i] = {
+        newDare.pending[i] = {
             idx: user._id,
             id: user.id,
             nickname: user.nickname,
@@ -97,16 +104,7 @@ async function invitingUser(req, res, next){
 
     res.status(200).json({
         result: 1,
-        data: {
-            idx: dare._id,
-            creator: dare.creator,
-
-            date: dare.date,
-            place: dare.place,
-
-            invited: dare.invited,
-            pending: dare.pending
-        }
+        data: newDare
     });
 }
 
