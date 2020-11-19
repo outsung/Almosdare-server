@@ -70,7 +70,7 @@ async function invitingUser(req, res, next){
 
     for(let i = 0; i < dare.invited.length; i++){
         const user = await UserModel.Schema.findById(dare.invited[i]);
-        newDare.invited[i] = {
+        dare.invited[i] = {
             idx: user._id,
             id: user.id,
             nickname: user.nickname,
@@ -79,7 +79,7 @@ async function invitingUser(req, res, next){
     }
     for(let i = 0; i < dare.pending.length; i++){
         const user = await UserModel.Schema.findById(dare.pending[i]);
-        newDare.pending[i] = {
+        dare.pending[i] = {
             idx: user._id,
             id: user.id,
             nickname: user.nickname,
