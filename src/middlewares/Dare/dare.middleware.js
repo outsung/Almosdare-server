@@ -25,7 +25,8 @@ async function create(req, res, next){
     const newDare = new DareModel.Schema({
         creator,
         place,
-        date
+        date,
+        invited: [creator]
     });
 
     const dare = await newDare.save();
@@ -51,8 +52,8 @@ async function invitingUserVerify(req, res, next){
     const dare = await DareModel.Schema.findById(idx);
     if(!dare) return res.status(200).json({result: -1, message: "idx : dare_is_not_exist"});
 
-    if(!(dare.invited.includes(user_idx) || String(dare.creator) === user_idx)) return res.status(401).json("No Permission");
-    if(users.filter(u => dare.pending.includes(u.idx) || dare.invited.includes(u.idx) || dare.creator === u.idx).length)
+    if(!dare.invited.includes(user_idx)) return res.status(401).json("No Permission");
+    if(users.filter(u => dare.pending.includes(u.idx) || dare.invited.includes(u.idx)).length)
         return res.status(200).json({result: -1, message: "already_invited"});
 
     next();
@@ -67,22 +68,6 @@ async function invitingUser(req, res, next){
     TimelineModel.Func.add(user_idx, `[log] dare_inviting_user : {_id: ${idx}, users: ${users.join(" ")}}`);
     console.log(`[log] dare_inviting_user : {_id: ${idx}, users: ${users.join(" ")}}`);          
 
-    const user = await UserModel.Schema.findById(dare.creator);
-    
-    const newDare = {
-        idx: dare._id,
-        creator: {
-            idx: user._id,
-            id: user.id,
-            nickname: user.nickname,
-            profileImageUrl: user.profileImageUrl
-        },
-        date: dare.date,
-        place: dare.place,
-        invited: [],
-        pending: []
-    }
-    
     for(let i = 0; i < dare.invited.length; i++){
         const user = await UserModel.Schema.findById(dare.invited[i]);
         newDare.invited[i] = {
@@ -104,7 +89,14 @@ async function invitingUser(req, res, next){
 
     res.status(200).json({
         result: 1,
-        data: newDare
+        data: {
+            idx: dare._id,
+            creator: dare.creator,
+            date: dare.date,
+            place: dare.place,
+            invited: dare.invited,
+            pending: dare.pending
+        }
     });
 }
 

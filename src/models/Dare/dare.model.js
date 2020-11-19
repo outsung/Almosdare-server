@@ -35,10 +35,13 @@ const dareSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: "User"
     }],
-    invited: [{
-        type: Schema.Types.ObjectId,
-        ref: "User"
-    }]
+    invited: {
+        type:[{
+            type: Schema.Types.ObjectId,
+            ref: "User"
+        }],
+        validate: v => v.length >= 1,
+    }
 },
 {
     timestamps: true,
