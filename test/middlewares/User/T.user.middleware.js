@@ -5,7 +5,6 @@ const UserModel = require("../../../src/models/User/user.model");
 const Chai = require('chai');
 const Sinon = require('sinon');
 
-
 // const Jwt = require("jsonwebtoken");
 // const Crypto = require("crypto");
 // const TimelineModel = require("../../models/Timeline/timeline.model");
@@ -221,7 +220,7 @@ describe('======== UserMiddleware 테스트 ========', function(){
             }
         };
 
-        describe('Verify', function(){ Base.middlewareVerifyTest(UserMiddleware.getUserByIdx[0], basicRequest); });
+        describe('Base Verify', function(){ Base.middlewareVerifyTest(UserMiddleware.getUserByIdx[0], basicRequest); });
 
         // Base.middlewareActionTest(UserMiddleware.getUserByIdx[1], basicResponse);
         describe('Action', function(){
