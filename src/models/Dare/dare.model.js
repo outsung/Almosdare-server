@@ -11,20 +11,12 @@ const dareSchema = new Schema({
     },
     
     place: {
-        type: {
-            name: {
-                type: String,
-                required: true
-            },
-            latitude: {
-                type: String,
-                required: true
-            },
-            longitude: {
-                type: String,
-                required: true
-            },
+        type:{
+            name: {type: String},
+            latitude: {type: String},
+            longitude: {type: String},
         },
+        required: true
     },
     date: {
         type: Date,
