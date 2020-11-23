@@ -15,7 +15,34 @@ describe('======== DareModel 테스트 ========', function(){
                 Chai.expect(err.errors.creator).to.exist;
                 Chai.expect(err.errors.place).to.exist;
                 Chai.expect(err.errors.date).to.exist;
+                Chai.expect(err.errors.invited).to.exist;
                 
+                done();
+            });
+        });
+        it('invited.length가 1보다 작다면 실패해야한다', function(done){
+            const d = new DareModel.Schema({
+                creator: Mongoose.Types.ObjectId(),
+                date: new Date(), 
+                place: {},
+                invited: [],
+            });
+            
+            d.validate(function(err){
+                Chai.expect(err.errors.invited).to.exist;
+                done();
+            });
+        });
+        it('invited.length가 1보다 크다면 성공해야한다', function(done){
+            const d = new DareModel.Schema({
+                creator: Mongoose.Types.ObjectId(),
+                date: new Date(), 
+                place: {},
+                invited: [Mongoose.Types.ObjectId()],
+            });
+            
+            d.validate(function(err){
+                Chai.expect(err).to.not.exist;
                 done();
             });
         });
@@ -30,12 +57,16 @@ describe('======== DareModel 테스트 ========', function(){
             afterEach(() => Sinon.verifyAndRestore());
 
             it('사용되는 쿼리는 정해져 있다', function(){
-                Sinon.stub(DareModel.Schema, 'find');
+                const dares = [];
+                Sinon.stub(DareModel.Schema, 'find').returns(dares);
+                Sinon.stub(dares, 'sort');
+
                 const expectedIdx = Mongoose.Types.ObjectId();
                 
                 DareModel.Func.getDareByUser(expectedIdx);
 
                 Sinon.assert.calledWith(DareModel.Schema.find, {$or: [{creator: expectedIdx}, {invited: {$in : expectedIdx}}]});
+                Sinon.assert.calledWith(dares.sort, {updatedAt: -1});
             });
 
             it('반환값은 정해져 있다', async function(){
@@ -49,7 +80,8 @@ describe('======== DareModel 테스트 ========', function(){
                     temp: "temp",
                 }];
                 Sinon.stub(DareModel.Schema, 'find').returns(expectedDare);
-
+                Sinon.stub(expectedDare, 'sort').returns(expectedDare);
+                
                 const fineDare = await DareModel.Func.getDareByUser('idx');
                 
                 Chai.expect(fineDare[0].idx).to.exist;
@@ -68,12 +100,16 @@ describe('======== DareModel 테스트 ========', function(){
             afterEach(() => Sinon.verifyAndRestore());
             
             it('사용되는 쿼리는 정해져 있다', function(){
-                Sinon.stub(DareModel.Schema, 'find');
+                const dares = [];
+                Sinon.stub(DareModel.Schema, 'find').returns(dares);
+                Sinon.stub(dares, 'sort');
+
                 const expectedIdx = Mongoose.Types.ObjectId();
                 
                 DareModel.Func.getPendingDareByUser(expectedIdx);
 
                 Sinon.assert.calledWith(DareModel.Schema.find, {pending: {$in : expectedIdx}});
+                Sinon.assert.calledWith(dares.sort, {updatedAt: -1});
             });
 
             it('반환값은 정해져 있다', async function(){
@@ -87,6 +123,7 @@ describe('======== DareModel 테스트 ========', function(){
                     temp: "temp",
                 }];
                 Sinon.stub(DareModel.Schema, 'find').returns(expectedDare);
+                Sinon.stub(expectedDare, 'sort').returns(expectedDare);
 
                 const fineDare = await DareModel.Func.getPendingDareByUser('idx');
                 

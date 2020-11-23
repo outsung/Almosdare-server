@@ -42,12 +42,16 @@ describe('======== InstantModel 테스트 ========', function(){
             afterEach(() => Sinon.verifyAndRestore());
 
             it('사용되는 쿼리는 정해져 있다', function(){
-                Sinon.stub(InstantModel.Schema, 'find');
+                const instants = [];
+                Sinon.stub(InstantModel.Schema, 'find').returns(instants);
+                Sinon.stub(instants, 'sort');
+                
                 const expectedIdx = Mongoose.Types.ObjectId();
                 
                 InstantModel.Func.getInstantByUser(expectedIdx);
 
                 Sinon.assert.calledWith(InstantModel.Schema.find, {invited: {$in : expectedIdx}});
+                Sinon.assert.calledWith(instants.sort, {updatedAt: -1});
             });
 
             it('반환값은 정해져 있다', async function(){
@@ -58,6 +62,7 @@ describe('======== InstantModel 테스트 ========', function(){
                     temp: "temp",
                 }];
                 Sinon.stub(InstantModel.Schema, 'find').returns(expectedInstant);
+                Sinon.stub(expectedInstant, 'sort').returns(expectedInstant);
 
                 const fineInstant = await InstantModel.Func.getInstantByUser('idx');
                 
@@ -74,12 +79,16 @@ describe('======== InstantModel 테스트 ========', function(){
             afterEach(() => Sinon.verifyAndRestore());
             
             it('사용되는 쿼리는 정해져 있다', function(){
-                Sinon.stub(InstantModel.Schema, 'find');
+                const instants = [];
+                Sinon.stub(InstantModel.Schema, 'find').returns(instants);
+                Sinon.stub(instants, 'sort').returns(instants);
+                
                 const expectedIdx = Mongoose.Types.ObjectId();
                 
                 InstantModel.Func.getPendingInstantByUser(expectedIdx);
 
                 Sinon.assert.calledWith(InstantModel.Schema.find, {pending: {$in : expectedIdx}});
+                Sinon.assert.calledWith(instants.sort, {updatedAt: -1});
             });
 
             it('반환값은 정해져 있다', async function(){
@@ -90,6 +99,7 @@ describe('======== InstantModel 테스트 ========', function(){
                     temp: "temp",
                 }];
                 Sinon.stub(InstantModel.Schema, 'find').returns(expectedInstant);
+                Sinon.stub(expectedInstant, 'sort').returns(expectedInstant);
 
                 const fineInstant = await InstantModel.Func.getPendingInstantByUser('idx');
                 
