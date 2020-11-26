@@ -1,5 +1,6 @@
-
 // Require
+require('dotenv').config();
+
 const Jwt = require("jsonwebtoken");
 
 function include_jwt_info(req, res, next){
