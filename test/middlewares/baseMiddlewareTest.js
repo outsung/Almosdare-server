@@ -29,10 +29,10 @@ function middlewareVerifyTest(middleware, requestForm){
     
     context('Expect', function(){
         context('유효한 요청이 들어왔을 때', function(){
-            it('next()는 한번만 호출해야한다', function(){
+            it('next()는 한번만 호출해야한다', async function(){
                 const spyNext = Sinon.spy();
         
-                middleware(requestForm, {}, spyNext);
+                await middleware(requestForm, {}, spyNext);
                 Chai.expect(spyNext.calledOnce).to.be.true;
             })
         })
