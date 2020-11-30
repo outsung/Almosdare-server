@@ -12,8 +12,12 @@ function createVerify(req, res, next){
     const date = req.body.date;
 
     if(!creator) return res.status(401).json("Available after login");
-    if(!place) return res.status(200).json({result: -1, message: "place : is_false"});
-    if(!date) return res.status(200).json({result: -1, message: "date : is_false"});
+    if(!date) return res.status(200).json({result: -1, message: "date : Field is empty"});
+    if(!place) return res.status(200).json({result: -1, message: "place : Field is empty"});
+
+    if(!Object.keys(place).includes("name") || !place.name) return res.status(200).json({result: -1, message: "place.name : Field is empty"});
+    if(!Object.keys(place).includes("latitude") || !place.latitude) return res.status(200).json({result: -1, message: "place.latitude : Field is empty"});
+    if(!Object.keys(place).includes("longitude") || !place.longitude) return res.status(200).json({result: -1, message: "place.longitude : Field is empty"});
 
     next();
 }
@@ -100,6 +104,7 @@ async function invitingUser(req, res, next){
     });
 }
 
+// 수정예정
 async function responseDareVerify(req, res, next){
     const idx = req.params.idx;
     const user_idx = req.jwt_user_idx;

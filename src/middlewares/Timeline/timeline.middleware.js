@@ -9,8 +9,8 @@ function getByTimeVerify(req, res, next){
     const limit = req.params.limit;
 
     if(!user_idx) return res.status(401).json("Available after login");
-    if(!limit) return res.status(401).json("limit : is_false");
-    if(!Number(limit)) return res.status(401).json("limit : is_not_number");
+    if(!limit) return res.status(200).json({result: -1, message: "limit : Field is empty"})
+    if(!Number(limit)) return res.status(200).json({result: -1, message: "limit : Field is not Number"});
     
     next();
 }
@@ -20,8 +20,12 @@ async function getByTime(req, res, next){
     const limit = req.params.limit;
     
     const find_res = await TimelineModel.Schema.find({$and: [{createdAt: {$lte: before || Date.now()}}, {user: user_idx}]}).limit(Number(limit));
-    
-    res.status(200).json({result: 1, data: find_res});
+
+    res.status(200).json({result: 1, data: find_res.map(t => {return {
+        idx: t._id,
+        user: t.user,
+        message: t.message,
+    }})});
 }
 
 // test
